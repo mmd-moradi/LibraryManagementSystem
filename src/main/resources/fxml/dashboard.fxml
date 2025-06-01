@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.DashboardController">
+    <top>
+        <MenuBar>
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem text="Log Out" onAction="#handleLogout" />
+                        <SeparatorMenuItem />
+                        <MenuItem text="Exit" onAction="#handleExit" />
+                    </items>
+                </Menu>
+                <Menu text="Books">
+                    <items>
+                        <MenuItem text="View All Books" onAction="#showAllBooks" />
+                        <MenuItem text="Add New Book" onAction="#showAddBook" />
+                        <MenuItem text="Search Books" onAction="#showSearchBooks" />
+                    </items>
+                </Menu>
+                <Menu text="Users">
+                    <items>
+                        <MenuItem text="View All Users" onAction="#showAllUsers" />
+                        <MenuItem text="Add New User" onAction="#showAddUser" />
+                        <MenuItem text="Search Users" onAction="#showSearchUsers" />
+                    </items>
+                </Menu>
+                <Menu text="Circulation">
+                    <items>
+                        <MenuItem text="Issue Book" onAction="#showIssueBook" />
+                        <MenuItem text="Return Book" onAction="#showReturnBook" />
+                        <MenuItem text="Current Borrows" onAction="#showCurrentBorrows" />
+                    </items>
+                </Menu>
+                <Menu text="Reports">
+                    <items>
+                        <MenuItem text="Overdue Books" onAction="#showOverdueBooks" />
+                        <MenuItem text="Popular Books" onAction="#showPopularBooks" />
+                    </items>
+                </Menu>
+                <Menu text="Help">
+                    <items>
+                        <MenuItem text="About" onAction="#showAbout" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Dashboard">
+                <VBox stylesheets="@../css/styles.css" spacing="20" alignment="CENTER">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20" />
+                    </padding>
+                    
+                    <HBox spacing="20" alignment="CENTER">
+                        <VBox stylesheets="@../css/styles.css" styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="Total Books" styleClass="stat-title" />
+                            <Label fx:id="totalBooksLabel" text="0" styleClass="stat-value" />
+                        </VBox>
+                        
+                        <VBox stylesheets="@../css/styles.css" styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="Books Borrowed" styleClass="stat-title" />
+                            <Label fx:id="borrowedBooksLabel" text="0" styleClass="stat-value" />
+                        </VBox>
+                        
+                        <VBox stylesheets="@../css/styles.css" styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="Total Users" styleClass="stat-title" />
+                            <Label fx:id="totalUsersLabel" text="0" styleClass="stat-value" />
+                        </VBox>
+                        
+                        <VBox stylesheets="@../css/styles.css" styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="Overdue Books" styleClass="stat-title" />
+                            <Label fx:id="overdueBooksLabel" text="0" styleClass="stat-value" />
+                        </VBox>
+                    </HBox>
+                    
+                    <TitledPane text="Recent Activities" collapsible="false">
+                        <TableView fx:id="recentActivitiesTable">
+                            <columns>
+                                <TableColumn text="Date" fx:id="dateColumn" />
+                                <TableColumn text="Action" fx:id="actionColumn" />
+                                <TableColumn text="Details" fx:id="detailsColumn" />
+                                <TableColumn text="User" fx:id="userColumn" />
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+    
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="status-bar">
+            <padding>
+                <Insets top="5" right="10" bottom="5" left="10" />
+            </padding>
+            <Label text="Logged in as:" />
+            <Label fx:id="currentUserLabel" text="Admin" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="statusLabel" text="Ready" />
+        </HBox>
+    </bottom>
+</BorderPane>
