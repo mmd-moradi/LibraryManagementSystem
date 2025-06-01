@@ -9,8 +9,45 @@ Para obter uma cópia do projeto em sua máquina, execute o comando abaixo no te
 ```bash
 git clone https://github.com/mmd-moradi/LibraryManagementSystem.git
 ```
+## Como contribuir
 
-Substitua `seu-usuario` pelo nome de usuário correto do repositório, se necessário.
+Siga os passos abaixo para contribuir com este projeto:
+
+1. **Faça um fork do repositório**  
+   No GitHub, clique em "Fork" no canto superior direito da página do repositório.
+
+2. **Clone o seu fork para sua máquina**  
+   ```bash
+   git clone https://github.com/seu-usuario/LibraryManagementSystem.git
+   ```
+   Substitua `seu-usuario` pelo seu nome de usuário do GitHub.
+
+3. **Crie uma nova branch para sua contribuição**  
+   ```bash
+   git checkout -b nome-da-sua-branch
+   ```
+
+4. **Implemente suas alterações**  
+   Faça as modificações desejadas no código.
+
+5. **Adicione e faça commit das alterações**  
+   ```bash
+   git add .
+   git commit -m "Descreva brevemente sua contribuição"
+   ```
+
+6. **Envie sua branch para o seu fork no GitHub**  
+   ```bash
+   git push origin nome-da-sua-branch
+   ```
+
+7. **Abra um Pull Request**  
+   No GitHub, acesse seu fork, selecione a branch criada e clique em "Compare & pull request". Descreva suas alterações e envie o PR.
+
+8. **Aguarde a revisão**  
+   Suas alterações serão analisadas e, se aprovadas, serão integradas ao projeto principal.
+
+Fique à vontade para contribuir com melhorias, correções de bugs ou novas funcionalidades!
 
 ## Como executar o projeto no NetBeans IDE
 
