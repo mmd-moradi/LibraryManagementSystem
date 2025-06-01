@@ -7,7 +7,7 @@ Este é um sistema de gerenciamento de biblioteca desenvolvido em Java, utilizan
 Para obter uma cópia do projeto em sua máquina, execute o comando abaixo no terminal:
 
 ```bash
-git clone https://github.com/seu-usuario/LibraryManagementSystem.git
+git clone https://github.com/mmd-moradi/LibraryManagementSystem.git
 ```
 
 Substitua `seu-usuario` pelo nome de usuário correto do repositório, se necessário.
