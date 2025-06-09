@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.library.controller.PopularBooksController" 
+      spacing="15" stylesheets="@../css/styles.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+    
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Text styleClass="page-title" text="Relatório de Livros Populares" />
+        <Region HBox.hgrow="ALWAYS" />
+        <ComboBox fx:id="periodComboBox" promptText="Período" />
+        <Label text="Data: " />
+        <Label fx:id="currentDateLabel" text="09/06/2025" />
+    </HBox>
+    
+    <HBox styleClass="summary-container" spacing="20">
+        <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+            <Text styleClass="summary-title" text="Total de Empréstimos" />
+            <Text styleClass="summary-value" fx:id="totalBorrowsLabel" text="287" />
+        </VBox>
+        
+        <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+            <Text styleClass="summary-title" text="Livro Mais Popular" />
+            <Text styleClass="summary-value" fx:id="mostPopularLabel" text="Harry Potter" />
+        </VBox>
+        
+        <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+            <Text styleClass="summary-title" text="Categoria Mais Popular" />
+            <Text styleClass="summary-value" fx:id="topCategoryLabel" text="Fantasia" />
+        </VBox>
+    </HBox>
+    
+    <HBox spacing="15">
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Text styleClass="section-title" text="Livros Mais Emprestados" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Exportar Relatório" styleClass="action-button-small" onAction="#handleExport" />
+                <Button text="Recomendar Aquisições" styleClass="action-button-small" onAction="#handleRecommendations" />
+            </HBox>
+            
+            <TableView fx:id="popularBooksTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
+                <columns>
+                    <TableColumn text="Posição" fx:id="rankingColumn" prefWidth="70" />
+                    <TableColumn text="ID" fx:id="idColumn" prefWidth="60" />
+                    <TableColumn text="Título" fx:id="titleColumn" prefWidth="200" />
+                    <TableColumn text="Autor" fx:id="authorColumn" prefWidth="150" />
+                    <TableColumn text="Categoria" fx:id="categoryColumn" prefWidth="100" />
+                    <TableColumn text="Empréstimos" fx:id="borrowCountColumn" prefWidth="100" />
+                    <TableColumn text="Último Empréstimo" fx:id="lastBorrowedColumn" prefWidth="120" />
+                </columns>
+                <placeholder>
+                    <Label text="Nenhum dado disponível" styleClass="empty-table-placeholder" />
+                </placeholder>
+            </TableView>
+        </VBox>
+        
+        <VBox spacing="10" minWidth="350">
+            <Text styleClass="section-title" text="Estatísticas" />
+            <BarChart fx:id="popularityChart" title="Top 5 Livros Mais Populares" legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Livros" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Número de Empréstimos" />
+                </yAxis>
+            </BarChart>
+            <VBox styleClass="report-card">
+                <Text styleClass="card-title" text="Tendências de Empréstimo" />
+                <ListView fx:id="trendsList" prefHeight="150" />
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>

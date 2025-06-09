@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.library.controller.UsersViewController" 
+      spacing="10" stylesheets="@../css/styles.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Pesquisar:" />
+        <TextField fx:id="searchField" promptText="Digite nome, ID ou email" HBox.hgrow="ALWAYS" />
+        <ComboBox fx:id="userTypeComboBox" promptText="Tipo de Usuário" />
+        <Button text="Pesquisar" onAction="#handleSearch" />
+        <Button text="Limpar" onAction="#handleClear" />
+    </HBox>
+    
+    <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn" />
+            <TableColumn text="Nome" fx:id="nameColumn" />
+            <TableColumn text="Tipo" fx:id="typeColumn" />
+            <TableColumn text="Email" fx:id="emailColumn" />
+            <TableColumn text="Telefone" fx:id="phoneColumn" />
+            <TableColumn text="Status da Conta" fx:id="statusColumn" />
+        </columns>
+        <placeholder>
+            <Label text="Nenhum usuário disponível" />
+        </placeholder>
+    </TableView>
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Adicionar Estudante" onAction="#handleAddStudent" />
+        <Button text="Adicionar Funcionário" onAction="#handleAddEmployee" />
+        <Button text="Editar Usuário" onAction="#handleEditUser" />
+        <Button text="Excluir Usuário" onAction="#handleDeleteUser" />
+    </HBox>
+</VBox>

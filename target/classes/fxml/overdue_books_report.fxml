@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.chart.PieChart?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.library.controller.OverdueReportController" 
+      spacing="15" stylesheets="@../css/styles.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+    
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Text styleClass="page-title" text="Relatório de Livros Atrasados" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Label text="Data: " />
+        <Label fx:id="currentDateLabel" text="09/06/2025" />
+    </HBox>
+    
+    <HBox styleClass="summary-container" spacing="20">
+        <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+            <Text styleClass="summary-title" text="Total de Livros Atrasados" />
+            <Text styleClass="summary-value" fx:id="totalOverdueLabel" text="5" />
+        </VBox>
+        
+        <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+            <Text styleClass="summary-title" text="Multas Pendentes" />
+            <Text styleClass="summary-value" fx:id="totalFeesLabel" text="R$ 127,50" />
+        </VBox>
+        
+        <VBox styleClass="summary-card" HBox.hgrow="ALWAYS">
+            <Text styleClass="summary-title" text="Atraso Médio" />
+            <Text styleClass="summary-value" fx:id="averageDaysLabel" text="8 dias" />
+        </VBox>
+    </HBox>
+    
+    <HBox spacing="15">
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Text styleClass="section-title" text="Lista de Livros Atrasados" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Exportar Relatório" styleClass="action-button-small" onAction="#handleExport" />
+                <Button text="Notificar Usuários" styleClass="action-button-small" onAction="#handleNotifyUsers" />
+            </HBox>
+            
+            <TableView fx:id="overdueTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
+                <columns>
+                    <TableColumn text="ID" fx:id="idColumn" prefWidth="60" />
+                    <TableColumn text="Título" fx:id="titleColumn" prefWidth="200" />
+                    <TableColumn text="Usuário" fx:id="userColumn" prefWidth="150" />
+                    <TableColumn text="Data de Empréstimo" fx:id="borrowDateColumn" prefWidth="120" />
+                    <TableColumn text="Data de Devolução" fx:id="dueDateColumn" prefWidth="120" />
+                    <TableColumn text="Dias Atrasados" fx:id="daysLateColumn" prefWidth="100" />
+                    <TableColumn text="Multa" fx:id="feeColumn" prefWidth="100" />
+                </columns>
+                <placeholder>
+                    <Label text="Nenhum livro atrasado" styleClass="empty-table-placeholder" />
+                </placeholder>
+            </TableView>
+        </VBox>
+        
+        <VBox spacing="10" minWidth="300">
+            <Text styleClass="section-title" text="Estatísticas" />
+            <PieChart fx:id="categoryChart" title="Livros Atrasados por Categoria" legendVisible="true" />
+            <VBox styleClass="report-card">
+                <Text styleClass="card-title" text="Usuários com Mais Atrasos" />
+                <ListView fx:id="topUsersList" prefHeight="150" />
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>

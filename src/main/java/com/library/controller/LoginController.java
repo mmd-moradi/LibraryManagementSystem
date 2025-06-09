@@ -1,5 +1,6 @@
 package com.library.controller;
 
+import com.library.librarymanagementsystem.App;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,8 +8,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
-
-import com.library.librarymanagementsystem.App;
 
 public class LoginController {
     @FXML
@@ -32,7 +31,7 @@ public class LoginController {
         String password = passwordField.getText();
         
         if (username.isEmpty() || password.isEmpty()) {
-            messageLabel.setText("Username and password cannot be empty");
+            messageLabel.setText("Usuário e senha não podem estar vazios");
             return;
         }
         
@@ -40,10 +39,10 @@ public class LoginController {
             try {
                 App.setRoot("dashboard");
             } catch (IOException e) {
-                messageLabel.setText("Error loading dashboard: " + e.getMessage());
+                messageLabel.setText("Erro ao carregar painel: " + e.getMessage());
             }
         } else {
-            messageLabel.setText("Invalid username or password");
+            messageLabel.setText("Usuário ou senha inválidos");
         }
     }
     

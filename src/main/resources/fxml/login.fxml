@@ -5,13 +5,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
 
-<VBox stylesheets="@../css/styles.css" alignment="CENTER" spacing="20.0" styleClass="background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.LoginController">
+<VBox alignment="CENTER" spacing="20.0" styleClass="background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.LoginController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     
     <children>
-        <Text styleClass="title-text" text="Library Management System" />
+        <Text styleClass="title-text" text="Sistema de Gerenciamento de Biblioteca" />
         
         <GridPane hgap="10" vgap="10" alignment="CENTER">
             <columnConstraints>
@@ -19,16 +19,16 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="250" />
             </columnConstraints>
             
-            <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label text="Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
             <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             
-            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Senha:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         </GridPane>
         
         <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="loginButton" text="Login" onAction="#handleLogin" defaultButton="true" />
-            <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel" />
+            <Button fx:id="loginButton" text="Entrar" onAction="#handleLogin" defaultButton="true" />
+            <Button fx:id="cancelButton" text="Cancelar" onAction="#handleCancel" />
         </HBox>
         
         <Label fx:id="messageLabel" styleClass="message-text" />

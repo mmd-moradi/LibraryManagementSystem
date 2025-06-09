@@ -4,39 +4,39 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.BooksViewController" spacing="10">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.BooksViewController" spacing="10" stylesheets="@../css/styles.css">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20" />
     </padding>
     
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Search:" />
-        <TextField fx:id="searchField" promptText="Enter title, author, or ISBN" HBox.hgrow="ALWAYS" />
-        <ComboBox fx:id="filterComboBox" promptText="Filter by" />
-        <Button text="Search" onAction="#handleSearch" />
-        <Button text="Clear" onAction="#handleClear" />
+        <Label text="Pesquisar:" />
+        <TextField fx:id="searchField" promptText="Digite título, autor ou ISBN" HBox.hgrow="ALWAYS" />
+        <ComboBox fx:id="filterComboBox" promptText="Filtrar por" />
+        <Button text="Pesquisar" onAction="#handleSearch" />
+        <Button text="Limpar" onAction="#handleClear" />
     </HBox>
     
     <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn text="ID" fx:id="idColumn" />
-            <TableColumn text="Title" fx:id="titleColumn" />
-            <TableColumn text="Author" fx:id="authorColumn" />
+            <TableColumn text="Título" fx:id="titleColumn" />
+            <TableColumn text="Autor" fx:id="authorColumn" />
             <TableColumn text="ISBN" fx:id="isbnColumn" />
-            <TableColumn text="Category" fx:id="categoryColumn" />
-            <TableColumn text="Publication Year" fx:id="yearColumn" />
+            <TableColumn text="Categoria" fx:id="categoryColumn" />
+            <TableColumn text="Ano de Publicação" fx:id="yearColumn" />
             <TableColumn text="Status" fx:id="statusColumn" />
         </columns>
         <placeholder>
-            <Label text="No books available" />
+            <Label text="Nenhum livro disponível" />
         </placeholder>
     </TableView>
     
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Add Book" onAction="#handleAddBook" />
-        <Button text="Edit Book" onAction="#handleEditBook" />
-        <Button text="Delete Book" onAction="#handleDeleteBook" />
-        <Button text="Issue Book" onAction="#handleIssueBook" />
-        <Button text="Return Book" onAction="#handleReturnBook" />
+        <Button text="Adicionar Livro" onAction="#handleAddBook" />
+        <Button text="Editar Livro" onAction="#handleEditBook" />
+        <Button text="Excluir Livro" onAction="#handleDeleteBook" />
+        <Button text="Emprestar Livro" onAction="#handleIssueBook" />
+        <Button text="Devolver Livro" onAction="#handleReturnBook" />
     </HBox>
 </VBox>

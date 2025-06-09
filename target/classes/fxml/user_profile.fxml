@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.library.controller.UserProfileController" 
+      spacing="15" stylesheets="@../css/styles.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+    
+    <Text styleClass="form-title" text="Perfil do Usuário" />
+    
+    <HBox spacing="20">
+        <VBox spacing="15" minWidth="300">
+            <TitledPane text="Informações Pessoais" expanded="true">
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="100" prefWidth="120" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="150" prefWidth="250" />
+                    </columnConstraints>
+                    
+                    <Label text="ID do Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="userIdLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    
+                    <Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="nameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    
+                    <Label text="Tipo de Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="userTypeLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    
+                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    
+                    <Label text="Telefone:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    
+                    <Label text="Endereço:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <Label fx:id="addressLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                </GridPane>
+            </TitledPane>
+            
+            <TitledPane text="Informações da Conta" expanded="true">
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="100" prefWidth="120" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="150" prefWidth="250" />
+                    </columnConstraints>
+                    
+                    <Label text="Nome de Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="usernameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    
+                    <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    
+                    <Label text="Último Login:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="lastLoginLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                </GridPane>
+            </TitledPane>
+            
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Editar Perfil" onAction="#handleEditProfile" />
+                <Button text="Alterar Senha" onAction="#handleChangePassword" />
+            </HBox>
+        </VBox>
+        
+        <VBox spacing="15" HBox.hgrow="ALWAYS">
+            <TitledPane text="Livros Emprestados" expanded="true" VBox.vgrow="ALWAYS">
+                <TableView fx:id="borrowedBooksTable">
+                    <columns>
+                        <TableColumn text="ID" fx:id="bookIdColumn" />
+                        <TableColumn text="Título" fx:id="titleColumn" />
+                        <TableColumn text="Data de Empréstimo" fx:id="issueDateColumn" />
+                        <TableColumn text="Data de Devolução" fx:id="dueDateColumn" />
+                        <TableColumn text="Status" fx:id="statusColumn" />
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhum livro emprestado" />
+                    </placeholder>
+                </TableView>
+            </TitledPane>
+            
+            <TitledPane text="Histórico de Atividades" expanded="true" VBox.vgrow="ALWAYS">
+                <TableView fx:id="activityHistoryTable">
+                    <columns>
+                        <TableColumn text="Data" fx:id="dateColumn" />
+                        <TableColumn text="Atividade" fx:id="activityColumn" />
+                        <TableColumn text="Detalhes" fx:id="detailsColumn" />
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhuma atividade registrada" />
+                    </placeholder>
+                </TableView>
+            </TitledPane>
+        </VBox>
+    </HBox>
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Fechar" onAction="#handleClose" />
+    </HBox>
+</VBox>
