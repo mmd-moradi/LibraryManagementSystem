@@ -1,6 +1,10 @@
 package com.library.controller;
 
 import com.library.librarymanagementsystem.App;
+import com.library.dao.UserDao;
+import com.library.model.Account;
+import com.library.model.AccountStatus;
+import com.library.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class LoginController {
     @FXML
@@ -25,6 +30,8 @@ public class LoginController {
     @FXML
     private Label messageLabel;
     
+    private UserDao userDao = new UserDao();
+    
     @FXML
     private void handleLogin() {
         String username = usernameField.getText();
@@ -35,14 +42,34 @@ public class LoginController {
             return;
         }
         
-        if (username.equals("admin") && password.equals("admin")) {
-            try {
+        try {
+            User user = userDao.findByUsername(username);
+            
+            if (user != null && user.getAccount() != null && 
+                password.equals(user.getAccount().getPassword())) {
+                
+                // Check account status
+                if (user.getAccount().getStatus() != AccountStatus.ACTIVE) {
+                    messageLabel.setText("Conta não está ativa. Contate o administrador.");
+                    return;
+                }
+                
+                // Update last login
+                Account account = user.getAccount();
+                account.setLastLogin(LocalDateTime.now());
+                userDao.update(user);
+                
+                // Store logged in user for use throughout the application
+                App.setLoggedInUser(user);
+                
+                // Navigate to dashboard
                 App.setRoot("dashboard");
-            } catch (IOException e) {
-                messageLabel.setText("Erro ao carregar painel: " + e.getMessage());
+            } else {
+                messageLabel.setText("Usuário ou senha inválidos");
             }
-        } else {
-            messageLabel.setText("Usuário ou senha inválidos");
+        } catch (Exception e) {
+            messageLabel.setText("Erro ao fazer login: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     

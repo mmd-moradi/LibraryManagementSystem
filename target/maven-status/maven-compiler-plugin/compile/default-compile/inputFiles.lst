@@ -1,3 +1,5 @@
+/home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/dao/BorrowingDao.java
+/home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/dao/UserDao.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/ReturnBookController.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/IssueBookController.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/LoginController.java
@@ -7,13 +9,17 @@
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/UserProfileController.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/AccountStatus.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/Librarian.java
+/home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/dao/FileStorage.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/LibraryDatabase.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/BookStatus.java
+/home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/dao/Dao.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/Student.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/BookFormController.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/UsersViewController.java
+/home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/dao/BookDao.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/PopularBooksController.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/Employee.java
+/home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/Borrowing.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/EmployeeFormController.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/model/LibraryManagementSystem.java
 /home/xcobar/NetBeansProjects/LibraryManagementSystem/src/main/java/com/library/controller/BooksViewController.java
