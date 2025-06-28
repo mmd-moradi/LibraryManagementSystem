@@ -93,16 +93,16 @@ public class PopularBooksController {
     
     @FXML
     private void initialize() {
-        // Configurar data atual
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         currentDateLabel.setText(LocalDate.now().format(formatter));
         
-        // Configurar ComboBox de período
+        
         periodComboBox.setItems(FXCollections.observableArrayList(
                 "Últimos 30 dias", "Últimos 90 dias", "Último ano", "Todos os tempos"));
         periodComboBox.getSelectionModel().select(0);
         
-        // Configurar colunas da tabela
+        
         rankingColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRanking()).asObject());
         idColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getId()));
         titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
@@ -111,7 +111,7 @@ public class PopularBooksController {
         borrowCountColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getBorrowCount()).asObject());
         lastBorrowedColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLastBorrowed()));
         
-        // Formatador para a coluna de data
+        
         lastBorrowedColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(LocalDate date, boolean empty) {
@@ -124,19 +124,19 @@ public class PopularBooksController {
             }
         });
         
-        // Adicionar listener para o ComboBox de período
+        
         periodComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 loadDataForPeriod(newVal);
             }
         });
         
-        // Carregar dados iniciais
+        
         loadDataForPeriod("Últimos 30 dias");
     }
     
     private void loadDataForPeriod(String period) {
-        // Dados fictícios para demonstração
+        
         ObservableList<PopularBook> books = FXCollections.observableArrayList();
         
         if ("Últimos 30 dias".equals(period)) {
@@ -170,7 +170,7 @@ public class PopularBooksController {
             
             totalBorrowsLabel.setText("530");
         } else {
-            // Dados para outros períodos
+            
             books.addAll(
                 new PopularBook(1, "B008", "Harry Potter e a Pedra Filosofal", "J.K. Rowling", "Fantasia", 145, LocalDate.now().minusDays(2)),
                 new PopularBook(2, "B007", "O Senhor dos Anéis", "J.R.R. Tolkien", "Fantasia", 138, LocalDate.now().minusDays(4)),
@@ -186,19 +186,19 @@ public class PopularBooksController {
             
             if ("Último ano".equals(period)) {
                 totalBorrowsLabel.setText("1167");
-            } else { // Todos os tempos
+            } else { 
                 totalBorrowsLabel.setText("2345");
             }
         }
         
         popularBooksTable.setItems(books);
         
-        // Atualizar estatísticas
+        
         if (!books.isEmpty()) {
             mostPopularLabel.setText(books.get(0).getTitle());
         }
         
-        // Calcular categoria mais popular
+        
         Map<String, Integer> categoryCounts = new HashMap<>();
         for (PopularBook book : books) {
             categoryCounts.put(book.getCategory(), 
@@ -212,11 +212,11 @@ public class PopularBooksController {
         
         topCategoryLabel.setText(topCategory);
         
-        // Atualizar gráfico de barras
+        
         popularityChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         
-        // Mostrar apenas os 5 primeiros livros no gráfico
+        
         for (int i = 0; i < Math.min(5, books.size()); i++) {
             PopularBook book = books.get(i);
             series.getData().add(new XYChart.Data<>(book.getTitle(), book.getBorrowCount()));
@@ -224,7 +224,7 @@ public class PopularBooksController {
         
         popularityChart.getData().add(series);
         
-        // Atualizar lista de tendências
+        
         ObservableList<String> trends = FXCollections.observableArrayList(
             "↑ Livros de Fantasia continuam populares",
             "↑ Aumento no interesse por Ficção Científica",

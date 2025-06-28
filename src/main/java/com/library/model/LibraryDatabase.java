@@ -15,7 +15,7 @@ public class LibraryDatabase {
         this.accounts = new ArrayList<>();
     }
     
-    // Getters and setters
+    
     public List<Book> getBooks() {
         return books;
     }
@@ -40,7 +40,7 @@ public class LibraryDatabase {
         this.accounts = accounts;
     }
     
-    // Book management methods
+    
     public void addBook(Book book) {
         books.add(book);
     }
@@ -85,7 +85,7 @@ public class LibraryDatabase {
                 .collect(Collectors.toList());
     }
     
-    // User management methods
+    
     public void addUser(User user) {
         users.add(user);
     }
@@ -118,7 +118,7 @@ public class LibraryDatabase {
                 .collect(Collectors.toList());
     }
     
-    // Account management methods
+    
     public void addAccount(Account account) {
         accounts.add(account);
     }
@@ -154,7 +154,7 @@ public class LibraryDatabase {
         return null;
     }
     
-    // Statistics methods
+    
     public int getTotalBooks() {
         return books.size();
     }

@@ -206,7 +206,7 @@ public class BooksViewController {
                     Scene scene = new Scene(loader.load());
                     
                     IssueBookController controller = loader.getController();
-                    // Pré-configurar o ID do livro
+                    
                     controller.preloadBookId(selectedBook.getBookId());
                     
                     Stage stage = new Stage();
@@ -215,7 +215,7 @@ public class BooksViewController {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.showAndWait();
                     
-                    // Atualizar a visualização após empréstimo
+                    
                     booksTable.refresh();
                     
                 } catch (IOException e) {
@@ -240,7 +240,7 @@ public class BooksViewController {
                     Scene scene = new Scene(loader.load());
                     
                     ReturnBookController controller = loader.getController();
-                    // Pré-configurar o ID do livro
+                    
                     controller.preloadBookId(selectedBook.getBookId());
                     
                     Stage stage = new Stage();
@@ -249,7 +249,7 @@ public class BooksViewController {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.showAndWait();
                     
-                    // Atualizar a visualização após devolução
+                    
                     booksTable.refresh();
                     
                 } catch (IOException e) {

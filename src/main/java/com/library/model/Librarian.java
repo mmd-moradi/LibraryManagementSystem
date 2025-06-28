@@ -6,7 +6,7 @@ public class Librarian extends Employee {
     private String specialization;
     
     public Librarian() {
-        // Default constructor
+        
     }
     
     public Librarian(String userId, String name, String email, String phoneNumber, 
@@ -16,7 +16,7 @@ public class Librarian extends Employee {
         this.specialization = specialization;
     }
     
-    // Getters and setters
+    
     public String getSpecialization() {
         return specialization;
     }
@@ -25,7 +25,7 @@ public class Librarian extends Employee {
         this.specialization = specialization;
     }
     
-    // Librarian-specific methods
+    
     public void addBook(Book book, LibraryDatabase database) {
         database.addBook(book);
     }

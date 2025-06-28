@@ -9,7 +9,7 @@ public class Employee extends User {
     private double salary;
     
     public Employee() {
-        // Default constructor
+        
     }
     
     public Employee(String userId, String name, String email, String phoneNumber, 
@@ -22,7 +22,7 @@ public class Employee extends User {
         this.salary = salary;
     }
     
-    // Getters and setters
+    
     public String getEmployeeId() {
         return employeeId;
     }

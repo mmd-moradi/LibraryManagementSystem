@@ -9,7 +9,7 @@ public abstract class User {
     private Account account;
     
     public User() {
-        // Default constructor
+        
     }
     
     public User(String userId, String name, String email, String phoneNumber, String address) {
@@ -20,7 +20,7 @@ public abstract class User {
         this.address = address;
     }
     
-    // Getters and setters
+    
     public String getUserId() {
         return userId;
     }
@@ -69,7 +69,7 @@ public abstract class User {
         this.account = account;
     }
     
-    // Abstract method that all user types must implement
+    
     public abstract String getUserType();
     
     @Override

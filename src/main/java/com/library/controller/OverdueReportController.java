@@ -61,7 +61,7 @@ public class OverdueReportController {
     @FXML
     private ListView<String> topUsersList;
     
-    private static final double DAILY_LATE_FEE = 0.50; // R$0,50 por dia
+    private static final double DAILY_LATE_FEE = 0.50; 
     
     public static class OverdueBook {
         private final String id;
@@ -82,7 +82,7 @@ public class OverdueReportController {
             this.borrowDate = borrowDate;
             this.dueDate = dueDate;
             
-            // Calcular dias de atraso e multa
+            
             this.daysLate = (int) ChronoUnit.DAYS.between(dueDate, LocalDate.now());
             this.fee = this.daysLate * DAILY_LATE_FEE;
         }
@@ -99,11 +99,11 @@ public class OverdueReportController {
     
     @FXML
     private void initialize() {
-        // Configurar data atual
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         currentDateLabel.setText(LocalDate.now().format(formatter));
         
-        // Configurar colunas da tabela
+        
         idColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getId()));
         titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
         userColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUserName()));
@@ -112,7 +112,7 @@ public class OverdueReportController {
         daysLateColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getDaysLate()).asObject());
         feeColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getFee()).asObject());
         
-        // Formatadores para as colunas de data e valor
+        
         borrowDateColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(LocalDate date, boolean empty) {
@@ -149,12 +149,12 @@ public class OverdueReportController {
             }
         });
         
-        // Carregar dados de exemplo
+        
         loadSampleData();
     }
     
     private void loadSampleData() {
-        // Dados fictícios para demonstração
+        
         ObservableList<OverdueBook> overdueBooks = FXCollections.observableArrayList(
             new OverdueBook("B003", "1984", "Ficção", "João Silva", 
                            LocalDate.now().minusDays(25), LocalDate.now().minusDays(11)),
@@ -170,7 +170,7 @@ public class OverdueReportController {
         
         overdueTable.setItems(overdueBooks);
         
-        // Atualizar estatísticas
+        
         int totalBooks = overdueBooks.size();
         double totalFees = overdueBooks.stream().mapToDouble(OverdueBook::getFee).sum();
         double avgDays = overdueBooks.stream().mapToInt(OverdueBook::getDaysLate).average().orElse(0);
@@ -179,7 +179,7 @@ public class OverdueReportController {
         totalFeesLabel.setText(String.format("R$ %.2f", totalFees));
         averageDaysLabel.setText(String.format("%.1f dias", avgDays));
         
-        // Dados para o gráfico de pizza
+        
         Map<String, Integer> categoryCounts = new HashMap<>();
         for (OverdueBook book : overdueBooks) {
             categoryCounts.put(book.getCategory(), categoryCounts.getOrDefault(book.getCategory(), 0) + 1);
@@ -191,7 +191,7 @@ public class OverdueReportController {
         }
         categoryChart.setData(pieChartData);
         
-        // Dados para a lista de usuários com mais atrasos
+        
         Map<String, Integer> userCounts = new HashMap<>();
         for (OverdueBook book : overdueBooks) {
             userCounts.put(book.getUserName(), userCounts.getOrDefault(book.getUserName(), 0) + 1);

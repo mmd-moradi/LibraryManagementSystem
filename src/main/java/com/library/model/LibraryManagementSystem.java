@@ -15,7 +15,7 @@ public class LibraryManagementSystem {
         this.librarians = new ArrayList<>();
     }
     
-    // Getters and setters
+    
     public String getLibraryName() {
         return libraryName;
     }
@@ -48,7 +48,7 @@ public class LibraryManagementSystem {
         this.currentUser = currentUser;
     }
     
-    // System operations
+    
     public boolean login(String username, String password) {
         Account account = database.findAccountByUsername(username);
         if (account != null && account.login(password)) {
@@ -70,7 +70,7 @@ public class LibraryManagementSystem {
         database.addUser(librarian);
     }
     
-    // Book management operations delegated to librarians
+    
     public void addBook(Book book, Librarian librarian) {
         if (isAuthorized(librarian)) {
             librarian.addBook(book, database);
@@ -83,12 +83,12 @@ public class LibraryManagementSystem {
         }
     }
     
-    // Helper methods
+    
     private boolean isAuthorized(User user) {
         return user != null && (user instanceof Librarian);
     }
     
-    // Statistics methods
+    
     public int getTotalBooks() {
         return database.getTotalBooks();
     }

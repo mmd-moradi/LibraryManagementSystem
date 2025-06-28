@@ -21,7 +21,7 @@ public class Account {
         this.status = AccountStatus.ACTIVE;
     }
     
-    // Getters and setters
+    
     public String getAccountId() {
         return accountId;
     }
@@ -73,7 +73,7 @@ public class Account {
         }
     }
     
-    // Account-specific methods
+    
     public boolean login(String enteredPassword) {
         boolean isValid = status == AccountStatus.ACTIVE && password.equals(enteredPassword);
         if (isValid) {
@@ -83,7 +83,7 @@ public class Account {
     }
     
     public void logout() {
-        // Perform logout operations
+        
     }
     
     public void suspend() {

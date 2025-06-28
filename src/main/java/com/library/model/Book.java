@@ -15,7 +15,7 @@ public class Book {
     private LocalDate dueDate;
     
     public Book() {
-        // Default constructor
+        
     }
     
     public Book(String bookId, String title, String author, String ISBN, 
@@ -29,7 +29,7 @@ public class Book {
         this.status = status;
     }
     
-    // Getters and setters
+    
     public String getBookId() {
         return bookId;
     }
@@ -114,7 +114,7 @@ public class Book {
         return status == BookStatus.AVAILABLE;
     }
     
-    // Methods for book operations
+    
     public void borrowBook(Student student, int borrowDays) {
         if (isAvailable()) {
             this.borrowedBy = student;

@@ -156,7 +156,7 @@ public class UserProfileController {
     public void setUser(User user) {
         this.currentUser = user;
         
-        // Preencher informações do usuário
+        
         userIdLabel.setText(user.getUserId());
         nameLabel.setText(user.getName());
         userTypeLabel.setText(getPortugueseUserType(user.getUserType()));
@@ -164,7 +164,7 @@ public class UserProfileController {
         phoneLabel.setText(user.getPhoneNumber());
         addressLabel.setText(user.getAddress());
         
-        // Preencher informações da conta
+        
         Account account = user.getAccount();
         if (account != null) {
             usernameLabel.setText(account.getUsername());
@@ -182,7 +182,7 @@ public class UserProfileController {
             lastLoginLabel.setText("N/A");
         }
         
-        // Carregar livros emprestados (apenas para estudantes)
+        
         if (user instanceof Student) {
             Student student = (Student) user;
             if (student.getBorrowedBooks() != null) {
@@ -190,7 +190,7 @@ public class UserProfileController {
             }
         }
         
-        // Carregar dados de atividade de exemplo
+        
         loadSampleActivityData();
     }
     
@@ -225,13 +225,13 @@ public class UserProfileController {
     
     @FXML
     private void handleEditProfile() {
-        // Esta funcionalidade será implementada posteriormente
+        
         showNotImplementedMessage("Editar Perfil");
     }
     
     @FXML
     private void handleChangePassword() {
-        // Esta funcionalidade será implementada posteriormente
+        
         showNotImplementedMessage("Alterar Senha");
     }
     

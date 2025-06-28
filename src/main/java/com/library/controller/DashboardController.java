@@ -66,7 +66,7 @@ public class DashboardController {
     
     private User loggedInUser;
     
-    // Class to hold activity data
+    
     public static class ActivityData {
         private final LocalDateTime dateTime;
         private final String action;
@@ -88,7 +88,7 @@ public class DashboardController {
     
     @FXML
     private void initialize() {
-        // Set up the table columns
+        
         dateColumn.setCellValueFactory(data -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             return new SimpleStringProperty(data.getValue().getDateTime().format(formatter));
@@ -98,13 +98,13 @@ public class DashboardController {
         detailsColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDetails()));
         userColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUser()));
         
-        // Empty table - no data
+        
         recentActivitiesTable.setItems(FXCollections.observableArrayList());
         
-        // Create demo user 
+        
         createDemoUser();
         
-        // Set current date
+        
         welcomeSubtext.setText("Data atual: 09/06/2025");
     }
     
@@ -112,14 +112,14 @@ public class DashboardController {
         Student student = new Student();
         student.setUserId("U001");
         student.setStudentId("S001");
-        student.setName("mmd-moradi"); // Updated to match login username
+        student.setName("mmd-moradi"); 
         student.setEmail("mmd-moradi@exemplo.com");
         student.setPhoneNumber("(11) 98765-4321");
         student.setAddress("Av. Paulista, 123 - São Paulo, SP");
         student.setDepartment("Ciência da Computação");
         
         this.loggedInUser = student;
-        currentUserLabel.setText("mmd-moradi"); // Updated to match login username
+        currentUserLabel.setText("mmd-moradi"); 
     }
     
     @FXML

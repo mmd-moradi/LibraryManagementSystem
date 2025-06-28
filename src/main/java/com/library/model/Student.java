@@ -20,7 +20,7 @@ public class Student extends User {
         this.borrowedBooks = new ArrayList<>();
     }
     
-    // Getters and setters
+    
     public String getStudentId() {
         return studentId;
     }
@@ -45,10 +45,10 @@ public class Student extends User {
         this.borrowedBooks = borrowedBooks;
     }
     
-    // Student-specific methods
+    
     public void borrowBook(Book book) {
         if (book.isAvailable() && borrowedBooks.size() < 5) {
-            book.borrowBook(this, 14); // Students can borrow for 14 days
+            book.borrowBook(this, 14); 
             borrowedBooks.add(book);
         }
     }
