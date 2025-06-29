@@ -1,8 +1,5 @@
 package com.library.librarymanagementsystem;
 
-import com.library.dao.BookDao;
-import com.library.dao.BorrowingDao;
-import com.library.dao.UserDao;
 import com.library.model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -53,15 +50,6 @@ public class App extends Application {
     private void initializeDatabase() {
         try {
             System.out.println("Initializing file-based database...");
-            
-            // Initialize DAOs and load sample data
-            BookDao bookDao = new BookDao();
-            UserDao userDao = new UserDao();
-            BorrowingDao borrowingDao = new BorrowingDao();
-            
-            bookDao.insertSampleData();
-            userDao.insertSampleData();
-            borrowingDao.insertSampleBorrowings();
             
             System.out.println("Database initialized with sample data.");
         } catch (Exception e) {

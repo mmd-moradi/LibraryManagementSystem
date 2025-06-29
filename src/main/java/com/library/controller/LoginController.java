@@ -1,7 +1,6 @@
 package com.library.controller;
 
 import com.library.librarymanagementsystem.App;
-import com.library.dao.UserDao;
 import com.library.model.Account;
 import com.library.model.AccountStatus;
 import com.library.model.User;
@@ -30,7 +29,6 @@ public class LoginController {
     @FXML
     private Label messageLabel;
     
-    private UserDao userDao = new UserDao();
     
     @FXML
     private void handleLogin() {
@@ -43,7 +41,7 @@ public class LoginController {
         }
         
         try {
-            User user = userDao.findByUsername(username);
+            User user = App.getLoggedInUser(); // Simulate user retrieval from database
             
             if (user != null && user.getAccount() != null && 
                 password.equals(user.getAccount().getPassword())) {
@@ -57,7 +55,6 @@ public class LoginController {
                 // Update last login
                 Account account = user.getAccount();
                 account.setLastLogin(LocalDateTime.now());
-                userDao.update(user);
                 
                 // Store logged in user for use throughout the application
                 App.setLoggedInUser(user);
