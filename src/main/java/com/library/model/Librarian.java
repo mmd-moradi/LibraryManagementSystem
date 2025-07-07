@@ -34,15 +34,7 @@ public class Librarian extends Employee {
         database.removeBook(book);
     }
     
-    public void issueBook(Book book, Student student) {
-        if (book.isAvailable()) {
-            student.borrowBook(book);
-        }
-    }
     
-    public void returnBook(Book book, Student student) {
-        student.returnBook(book);
-    }
     
     public void updateBookInfo(Book book, LibraryDatabase database) {
         database.updateBook(book);

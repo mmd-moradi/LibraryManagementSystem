@@ -1,14 +1,19 @@
 package com.library.controller;
 
-import com.library.librarymanagementsystem.App;
 import com.library.model.Account;
-import com.library.model.AccountStatus;
-import com.library.model.User;
+import com.library.model.LibraryManagementSystem;
+import com.library.service.LibraryDatabaseService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,56 +29,66 @@ public class LoginController {
     private Button loginButton;
     
     @FXML
-    private Button cancelButton;
+    private Label errorLabel;
+    
+    private LibraryManagementSystem librarySystem;
+    private LibraryDatabaseService dbService;
     
     @FXML
-    private Label messageLabel;
-    
-    
-    @FXML
-    private void handleLogin() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        
-        if (username.isEmpty() || password.isEmpty()) {
-            messageLabel.setText("Usuário e senha não podem estar vazios");
-            return;
-        }
-        
-        try {
-            User user = App.getLoggedInUser(); // Simulate user retrieval from database
-            
-            if (user != null && user.getAccount() != null && 
-                password.equals(user.getAccount().getPassword())) {
-                
-                // Check account status
-                if (user.getAccount().getStatus() != AccountStatus.ACTIVE) {
-                    messageLabel.setText("Conta não está ativa. Contate o administrador.");
-                    return;
-                }
-                
-                // Update last login
-                Account account = user.getAccount();
-                account.setLastLogin(LocalDateTime.now());
-                
-                // Store logged in user for use throughout the application
-                App.setLoggedInUser(user);
-                
-                // Navigate to dashboard
-                App.setRoot("dashboard");
-            } else {
-                messageLabel.setText("Usuário ou senha inválidos");
-            }
-        } catch (Exception e) {
-            messageLabel.setText("Erro ao fazer login: " + e.getMessage());
-            e.printStackTrace();
-        }
+    private void initialize() {
+        dbService = new LibraryDatabaseService();
+        librarySystem = new LibraryManagementSystem("Sistema de Gerenciamento de Biblioteca");
+        errorLabel.setVisible(false);
     }
     
     @FXML
-    private void handleCancel() {
-        usernameField.clear();
-        passwordField.clear();
-        messageLabel.setText("");
+    private void handleLogin(ActionEvent event) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+        
+        if (username.isEmpty() || password.isEmpty()) {
+            showError("Por favor, preencha todos os campos");
+            return;
+        }
+        
+        // Authenticate using the database
+        Account account = dbService.findAccountByUsername(username);
+        if (account != null && account.login(password)) {
+            // Update last login time
+            account.setLastLogin(LocalDateTime.now());
+            dbService.updateAccount(account);
+            
+            // Set current user in library system
+            librarySystem.setCurrentUser(account.getUser());
+            
+            try {
+                // Load dashboard.fxml - ensure the file exists in the /fxml folder
+                System.out.println("Loading dashboard.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
+                
+                Parent dashboardView = loader.load();
+                
+                DashboardController controller = loader.getController();
+                controller.setLibrarySystem(librarySystem);
+                controller.setLoggedInUser(account.getUser());
+                
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setTitle("Sistema de Biblioteca");
+                stage.setScene(new Scene(dashboardView));
+                stage.setMaximized(true);
+                stage.show();
+                
+            } catch (IOException e) {
+                showError("Error loading dashboard: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            showError("Nome de usuário ou senha inválidos");
+        }
+    }
+    
+    private void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
     }
 }

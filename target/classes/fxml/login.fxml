@@ -4,33 +4,32 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" styleClass="background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.LoginController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-    
-    <children>
-        <Text styleClass="title-text" text="Sistema de Gerenciamento de Biblioteca" />
+<StackPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.library.controller.LoginController"
+          prefHeight="400.0" prefWidth="600.0"
+          style="-fx-background-color: #f5f5f5;">
+
+    <VBox alignment="CENTER" spacing="20.0" maxWidth="350.0">
+        <padding>
+            <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+        </padding>
         
-        <GridPane hgap="10" vgap="10" alignment="CENTER">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="100" prefWidth="100" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="250" />
-            </columnConstraints>
-            
-            <Label text="Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            
-            <Label text="Senha:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        </GridPane>
+        <Text text="Sistema de Gerenciamento de Biblioteca" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Text text="Login" style="-fx-font-size: 16px;"/>
         
-        <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="loginButton" text="Entrar" onAction="#handleLogin" defaultButton="true" />
-            <Button fx:id="cancelButton" text="Cancelar" onAction="#handleCancel" />
+        <VBox spacing="10.0">
+            <TextField fx:id="usernameField" promptText="Nome de usuário" />
+            <PasswordField fx:id="passwordField" promptText="Senha" />
+        </VBox>
+        
+        <Label fx:id="errorLabel" text="Nome de usuário ou senha inválidos" textFill="RED" visible="false" />
+        
+        <HBox spacing="10.0" alignment="CENTER">
+            <Button fx:id="loginButton" text="Entrar" onAction="#handleLogin" prefWidth="100.0" />
         </HBox>
         
-        <Label fx:id="messageLabel" styleClass="message-text" />
-    </children>
-</VBox>
+    </VBox>
+</StackPane>

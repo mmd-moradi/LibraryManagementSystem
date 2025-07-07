@@ -1,274 +1,316 @@
 package com.library.controller;
 
+import com.library.model.Book;
+import com.library.model.BookStatus;
+import com.library.model.LibraryManagementSystem;
+import com.library.model.User;
+import com.library.service.LibraryDatabaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import com.library.model.Book;
-import com.library.model.BookStatus;
-
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class BooksViewController {
-    @FXML
-    private TextField searchField;
+public class BooksViewController implements DashboardController.BaseController {
+
+    @FXML private TableView<Book> booksTable;
+    @FXML private TableColumn<Book, String> bookIdColumn;
+    @FXML private TableColumn<Book, String> titleColumn;
+    @FXML private TableColumn<Book, String> authorColumn;
+    @FXML private TableColumn<Book, String> isbnColumn;
+    @FXML private TableColumn<Book, String> categoryColumn;
+    @FXML private TableColumn<Book, Integer> yearColumn;
+    @FXML private TableColumn<Book, BookStatus> statusColumn;
     
-    @FXML
-    private ComboBox<String> filterComboBox;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> searchTypeComboBox;
     
-    @FXML
-    private TableView<Book> booksTable;
+    private LibraryManagementSystem librarySystem;
+    private LibraryDatabaseService dbService;
+    private User loggedInUser;
+    private BookStatus filterStatus;
     
-    @FXML
-    private TableColumn<Book, String> idColumn;
-    
-    @FXML
-    private TableColumn<Book, String> titleColumn;
-    
-    @FXML
-    private TableColumn<Book, String> authorColumn;
-    
-    @FXML
-    private TableColumn<Book, String> isbnColumn;
-    
-    @FXML
-    private TableColumn<Book, String> categoryColumn;
-    
-    @FXML
-    private TableColumn<Book, Integer> yearColumn;
-    
-    @FXML
-    private TableColumn<Book, BookStatus> statusColumn;
-    
-    private ObservableList<Book> booksList = FXCollections.observableArrayList();
+    private ObservableList<Book> books = FXCollections.observableArrayList();
     
     @FXML
     private void initialize() {
-        filterComboBox.setItems(FXCollections.observableArrayList(
-                "Todos", "Título", "Autor", "ISBN", "Categoria", "Apenas Disponíveis"));
-        filterComboBox.getSelectionModel().selectFirst();
+        dbService = new LibraryDatabaseService();
         
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        // Initialize the ComboBox
+        searchTypeComboBox.setItems(FXCollections.observableArrayList(
+                "Título", "Autor", "ISBN", "Categoria"));
+        searchTypeComboBox.getSelectionModel().selectFirst();
+        
+        // Set up the columns
+        bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-        isbnColumn.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
+        isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("publicationYear"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         
-        loadDummyData();
+        // Load the books
+        loadBooks();
         
-        booksTable.setItems(booksList);
+        // Set up the search field to filter as you type
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            searchBooks();
+        });
+    }
+
+    @Override
+    public void setLibrarySystem(LibraryManagementSystem librarySystem) {
+        this.librarySystem = librarySystem;
+    }
+
+    @Override
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
     }
     
-    private void loadDummyData() {
-        booksList.add(new Book("B001", "O Grande Gatsby", "F. Scott Fitzgerald", "978-0743273565", "Ficção", 1925, BookStatus.AVAILABLE));
-        booksList.add(new Book("B002", "O Sol é Para Todos", "Harper Lee", "978-0061120084", "Ficção", 1960, BookStatus.AVAILABLE));
-        booksList.add(new Book("B003", "1984", "George Orwell", "978-0451524935", "Distopia", 1949, BookStatus.BORROWED));
-        booksList.add(new Book("B004", "Orgulho e Preconceito", "Jane Austen", "978-0141439518", "Clássico", 1813, BookStatus.AVAILABLE));
-        booksList.add(new Book("B005", "O Hobbit", "J.R.R. Tolkien", "978-0547928227", "Fantasia", 1937, BookStatus.RESERVED));
+    public void setFilter(BookStatus status) {
+        this.filterStatus = status;
+        loadBooks();
     }
     
     @FXML
-    private void handleSearch() {
-        String searchText = searchField.getText().toLowerCase();
-        String filter = filterComboBox.getValue();
+    private void searchBooks() {
+        String searchText = searchField.getText().toLowerCase().trim();
+        String searchType = searchTypeComboBox.getSelectionModel().getSelectedItem();
         
-        ObservableList<Book> filteredList = FXCollections.observableArrayList();
-        
-        for (Book book : booksList) {
-            boolean matches = false;
-            
-            if ("Todos".equals(filter)) {
-                matches = book.getTitle().toLowerCase().contains(searchText) ||
-                         book.getAuthor().toLowerCase().contains(searchText) ||
-                         book.getISBN().toLowerCase().contains(searchText) ||
-                         book.getCategory().toLowerCase().contains(searchText);
-            } else if ("Título".equals(filter)) {
-                matches = book.getTitle().toLowerCase().contains(searchText);
-            } else if ("Autor".equals(filter)) {
-                matches = book.getAuthor().toLowerCase().contains(searchText);
-            } else if ("ISBN".equals(filter)) {
-                matches = book.getISBN().toLowerCase().contains(searchText);
-            } else if ("Categoria".equals(filter)) {
-                matches = book.getCategory().toLowerCase().contains(searchText);
-            } else if ("Apenas Disponíveis".equals(filter)) {
-                matches = book.isAvailable() && 
-                        (book.getTitle().toLowerCase().contains(searchText) ||
-                         book.getAuthor().toLowerCase().contains(searchText) ||
-                         book.getISBN().toLowerCase().contains(searchText));
-            }
-            
-            if (matches) {
-                filteredList.add(book);
-            }
+        if (searchText.isEmpty()) {
+            loadBooks(); // Reset to show all books
+            return;
         }
         
-        booksTable.setItems(filteredList);
+        List<Book> allBooks = dbService.getAllBooks();
+        List<Book> filteredBooks;
+        
+        switch (searchType) {
+            case "Título":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getTitle().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            case "Autor":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getAuthor().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            case "ISBN":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getISBN() != null && 
+                                     book.getISBN().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            case "Categoria":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getCategory() != null && 
+                                     book.getCategory().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            default:
+                filteredBooks = allBooks;
+        }
+        
+        // Apply status filter if set
+        if (filterStatus != null) {
+            filteredBooks = filteredBooks.stream()
+                .filter(book -> book.getStatus() == filterStatus)
+                .collect(Collectors.toList());
+        }
+        
+        books.setAll(filteredBooks);
+    }
+    
+    private void loadBooks() {
+        List<Book> allBooks = dbService.getAllBooks();
+        
+        if (filterStatus != null) {
+            allBooks = allBooks.stream()
+                .filter(book -> book.getStatus() == filterStatus)
+                .collect(Collectors.toList());
+        }
+        
+        books.setAll(allBooks);
+        booksTable.setItems(books);
     }
     
     @FXML
-    private void handleClear() {
-        searchField.clear();
-        filterComboBox.getSelectionModel().selectFirst();
-        booksTable.setItems(booksList);
+    private void handleRefresh() {
+        loadBooks();
     }
-    
+
+    @FXML
+    private void handleBack() {
+        // Get the tab pane and close the current tab
+        TabPane tabPane = (TabPane) booksTable.getScene().lookup("#tabPane");
+        if (tabPane != null && tabPane.getTabs().size() > 1) {
+            tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+        }
+    }
+
     @FXML
     private void handleAddBook() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book_form.fxml"));
-            Scene scene = new Scene(loader.load());
-            
-            Stage stage = new Stage();
-            stage.setTitle("Adicionar Livro");
-            stage.setScene(scene);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-            
-            BookFormController controller = loader.getController();
-            Book newBook = controller.getBook();
-            
-            if (newBook != null) {
-                booksList.add(newBook);
-                booksTable.refresh();
-            }
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erro ao abrir formulário de livro: " + e.getMessage());
-        }
+      try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book_form.fxml"));
+        Parent root = loader.load();
+        
+        BookFormController controller = loader.getController();
+        controller.setLibrarySystem(librarySystem);
+        
+        Stage stage = new Stage();
+        stage.setTitle("Adicionar Livro");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(booksTable.getScene().getWindow());
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+        
+        // Refresh book list after form closes
+        loadBooks();
+      } catch (IOException e) {
+          e.printStackTrace();
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Erro");
+          alert.setHeaderText("Erro ao abrir formulário");
+          alert.setContentText("Não foi possível abrir o formulário de livro: " + e.getMessage());
+          alert.showAndWait();
+      }
     }
-    
+
     @FXML
     private void handleEditBook() {
         Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book_form.fxml"));
-                Scene scene = new Scene(loader.load());
-                
-                BookFormController controller = loader.getController();
-                controller.setBook(selectedBook);
-                
-                Stage stage = new Stage();
-                stage.setTitle("Editar Livro");
-                stage.setScene(scene);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.showAndWait();
-                
-                booksTable.refresh();
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert("Erro ao abrir formulário de edição: " + e.getMessage());
-            }
-        } else {
-            showAlert("Por favor, selecione um livro para editar");
+        if (selectedBook == null) {
+            showAlert("Selecione um livro para editar");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/book_form.fxml"));
+            Parent root = loader.load();
+            
+            BookFormController controller = loader.getController();
+            controller.setLibrarySystem(librarySystem);
+            controller.setBook(selectedBook);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Editar Livro");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(booksTable.getScene().getWindow());
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+            
+            // Refresh book list after form closes
+            loadBooks();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erro ao abrir formulário: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void handleDeleteBook() {
         Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmar Exclusão");
-            alert.setHeaderText("Excluir Livro");
-            alert.setContentText("Tem certeza que deseja excluir o livro '" + selectedBook.getTitle() + "'?");
-            
-            if (alert.showAndWait().get() == ButtonType.OK) {
-                booksList.remove(selectedBook);
-            }
-        } else {
-            showAlert("Por favor, selecione um livro para excluir");
+        if (selectedBook == null) {
+            showAlert("Selecione um livro para excluir");
+            return;
         }
-    }
-    
-    @FXML
-    private void handleIssueBook() {
-        Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            if (selectedBook.isAvailable()) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Exclusão");
+        alert.setHeaderText("Excluir " + selectedBook.getTitle());
+        alert.setContentText("Tem certeza que deseja excluir este livro permanentemente?");
+        
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/issue_book.fxml"));
-                    Scene scene = new Scene(loader.load());
-                    
-                    IssueBookController controller = loader.getController();
-                    
-                    controller.preloadBookId(selectedBook.getBookId());
-                    
-                    Stage stage = new Stage();
-                    stage.setTitle("Emprestar Livro");
-                    stage.setScene(scene);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.showAndWait();
-                    
-                    
-                    booksTable.refresh();
-                    
-                } catch (IOException e) {
+                    dbService.deleteBook(selectedBook);
+                    loadBooks();
+                    showInfo("Livro excluído com sucesso");
+                } catch (Exception e) {
+                    showAlert("Erro ao excluir livro: " + e.getMessage());
                     e.printStackTrace();
-                    showAlert("Erro ao abrir formulário de empréstimo: " + e.getMessage());
                 }
-            } else {
-                showAlert("Este livro não está disponível para empréstimo");
             }
-        } else {
-            showAlert("Por favor, selecione um livro para emprestar");
-        }
+        });
     }
-    
-    @FXML
-    private void handleReturnBook() {
-        Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            if (selectedBook.getStatus() == BookStatus.BORROWED) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/return_book.fxml"));
-                    Scene scene = new Scene(loader.load());
-                    
-                    ReturnBookController controller = loader.getController();
-                    
-                    controller.preloadBookId(selectedBook.getBookId());
-                    
-                    Stage stage = new Stage();
-                    stage.setTitle("Devolver Livro");
-                    stage.setScene(scene);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.showAndWait();
-                    
-                    
-                    booksTable.refresh();
-                    
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    showAlert("Erro ao abrir formulário de devolução: " + e.getMessage());
-                }
-            } else {
-                showAlert("Este livro não está emprestado atualmente");
-            }
-        } else {
-            showAlert("Por favor, selecione um livro para devolver");
-        }
-    }
-    
-    private void showAlert(String message) {
+
+// Add helper method for info alerts
+    private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Informação");
+        alert.setTitle("Sucesso");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
+    @FXML
+    private void handleSearch() {
+        String searchText = searchField.getText().toLowerCase().trim();
+        String searchType = searchTypeComboBox.getSelectionModel().getSelectedItem();
+        
+        if (searchText.isEmpty()) {
+            loadBooks(); // Reset to show all books
+            return;
+        }
+        
+        List<Book> allBooks = dbService.getAllBooks();
+        List<Book> filteredBooks;
+        
+        switch (searchType) {
+            case "Título":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getTitle().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            case "Autor":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getAuthor().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            case "ISBN":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getISBN() != null && 
+                                     book.getISBN().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            case "Categoria":
+                filteredBooks = allBooks.stream()
+                    .filter(book -> book.getCategory() != null && 
+                                     book.getCategory().toLowerCase().contains(searchText))
+                    .collect(Collectors.toList());
+                break;
+            default:
+                filteredBooks = allBooks;
+        }
+        
+        books.setAll(filteredBooks);
+    }
+
+    @FXML
+    private void handleClear() {
+        searchField.clear();
+        loadBooks();
+    }
+
+    private void showAlert(String message) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Erro");
+      alert.setHeaderText(null);
+      alert.setContentText(message);
+      alert.showAndWait();
+    }
+
 }

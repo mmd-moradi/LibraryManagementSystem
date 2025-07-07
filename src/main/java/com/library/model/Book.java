@@ -10,9 +10,6 @@ public class Book {
     private String category;
     private int publicationYear;
     private BookStatus status;
-    private Student borrowedBy;
-    private LocalDate borrowDate;
-    private LocalDate dueDate;
     
     public Book() {
         
@@ -86,52 +83,7 @@ public class Book {
         this.status = status;
     }
     
-    public Student getBorrowedBy() {
-        return borrowedBy;
-    }
     
-    public void setBorrowedBy(Student borrowedBy) {
-        this.borrowedBy = borrowedBy;
-    }
-    
-    public LocalDate getBorrowDate() {
-        return borrowDate;
-    }
-    
-    public void setBorrowDate(LocalDate borrowDate) {
-        this.borrowDate = borrowDate;
-    }
-    
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-    
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-    
-    public boolean isAvailable() {
-        return status == BookStatus.AVAILABLE;
-    }
-    
-    
-    public void borrowBook(Student student, int borrowDays) {
-        if (isAvailable()) {
-            this.borrowedBy = student;
-            this.status = BookStatus.BORROWED;
-            this.borrowDate = LocalDate.now();
-            this.dueDate = LocalDate.now().plusDays(borrowDays);
-        }
-    }
-    
-    public void returnBook() {
-        if (this.status == BookStatus.BORROWED) {
-            this.borrowedBy = null;
-            this.status = BookStatus.AVAILABLE;
-            this.borrowDate = null;
-            this.dueDate = null;
-        }
-    }
     
     public void reserveBook() {
         if (isAvailable()) {
@@ -139,11 +91,9 @@ public class Book {
         }
     }
     
-    public boolean isOverdue() {
-        if (this.status == BookStatus.BORROWED && this.dueDate != null) {
-            return LocalDate.now().isAfter(this.dueDate);
-        }
-        return false;
+    
+    public boolean isAvailable() {
+        return status == BookStatus.AVAILABLE;
     }
     
     @Override

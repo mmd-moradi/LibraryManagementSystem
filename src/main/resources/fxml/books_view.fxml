@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.BookViewController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controller.BooksViewController">
    <top>
       <VBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -43,15 +43,15 @@
       </VBox>
    </top>
    <center>
-      <TableView fx:id="booksTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="booksTable" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="bookIdColumn" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="titleColumn" prefWidth="200.0" text="Título" />
-            <TableColumn fx:id="authorColumn" prefWidth="150.0" text="Autor" />
-            <TableColumn fx:id="isbnColumn" prefWidth="100.0" text="ISBN" />
-            <TableColumn fx:id="categoryColumn" prefWidth="120.0" text="Categoria" />
-            <TableColumn fx:id="yearColumn" prefWidth="70.0" text="Ano" />
-            <TableColumn fx:id="statusColumn" prefWidth="80.0" text="Status" />
+          <TableColumn fx:id="authorColumn" prefWidth="150.0" text="Autor" />
+          <TableColumn fx:id="isbnColumn" prefWidth="100.0" text="ISBN" />
+          <TableColumn fx:id="categoryColumn" prefWidth="120.0" text="Categoria" />
+          <TableColumn fx:id="yearColumn" prefWidth="70.0" text="Ano" />
+          <TableColumn fx:id="statusColumn" prefWidth="80.0" text="Status" />
         </columns>
          <BorderPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -64,9 +64,6 @@
             <Button mnemonicParsing="false" onAction="#handleAddBook" text="Adicionar Livro" />
             <Button mnemonicParsing="false" onAction="#handleEditBook" text="Editar Livro" />
             <Button mnemonicParsing="false" onAction="#handleDeleteBook" text="Excluir Livro" />
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <Button mnemonicParsing="false" onAction="#handleIssueBook" text="Emprestar Livro" />
-            <Button mnemonicParsing="false" onAction="#handleReturnBook" text="Devolver Livro" />
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Button mnemonicParsing="false" onAction="#handleRefresh" text="Atualizar" />
          </children>

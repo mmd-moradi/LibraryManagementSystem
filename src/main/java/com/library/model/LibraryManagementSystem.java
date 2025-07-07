@@ -77,12 +77,6 @@ public class LibraryManagementSystem {
         }
     }
     
-    public void issueBook(Book book, Student student, Librarian librarian) {
-        if (isAuthorized(librarian)) {
-            librarian.issueBook(book, student);
-        }
-    }
-    
     
     private boolean isAuthorized(User user) {
         return user != null && (user instanceof Librarian);

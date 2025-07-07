@@ -8,20 +8,23 @@ public class Account {
     private String password;
     private LocalDateTime lastLogin;
     private AccountStatus status;
+    private LocalDateTime creationDate;
     private User user;
     
     public Account() {
         this.status = AccountStatus.ACTIVE;
+        this.creationDate = LocalDateTime.now();
     }
-    
+
     public Account(String accountId, String username, String password) {
         this.accountId = accountId;
         this.username = username;
         this.password = password;
         this.status = AccountStatus.ACTIVE;
+        this.creationDate = LocalDateTime.now();
     }
-    
-    
+
+
     public String getAccountId() {
         return accountId;
     }
@@ -101,6 +104,14 @@ public class Account {
     public boolean isActive() {
         return status == AccountStatus.ACTIVE;
     }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+    
     
     @Override
     public String toString() {

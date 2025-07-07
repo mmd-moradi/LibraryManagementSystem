@@ -72,6 +72,12 @@ public abstract class User {
     
     public abstract String getUserType();
     
+    public String getDisplayUserType() {
+        if (this instanceof Student) return "Estudante";
+        if (this instanceof Employee) return "Funcionário";
+        return "Usuário";
+    }
+
     @Override
     public String toString() {
         return "User{" +

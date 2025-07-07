@@ -1,6 +1,8 @@
 package com.library.controller;
 
 import com.library.model.Employee;
+import com.library.service.LibraryDatabaseService;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -51,16 +53,19 @@ public class EmployeeFormController {
     
     private Employee employee;
     private boolean isEditMode = false;
+    private LibraryDatabaseService dbService = new LibraryDatabaseService();
     
     @FXML
     private void initialize() {
         positionComboBox.setItems(FXCollections.observableArrayList(
-                "Bibliotecário", "Bibliotecário Assistente", "Auxiliar", "Gerente", "Administrador", "Suporte de TI", "Outro"
+            "Bibliotecário", "Bibliotecário Assistente", "Auxiliar", "Gerente", 
+            "Administrador", "Suporte de TI", "Outro"
         ));
         
         dateHiredPicker.setValue(LocalDate.now());
         
-        if (!isEditMode) {
+        // Only generate IDs for new employees
+        if (employee == null) {
             userIdField.setText("U" + String.format("%03d", (int)(Math.random() * 1000)));
             employeeIdField.setText("E" + String.format("%03d", (int)(Math.random() * 1000)));
         }
@@ -95,36 +100,44 @@ public class EmployeeFormController {
     @FXML
     private void handleSave() {
         try {
-            if (nameField.getText().isEmpty() || emailField.getText().isEmpty()) {
-                messageLabel.setText("Nome e Email são campos obrigatórios");
+            // Validate required fields
+            if (nameField.getText().isEmpty()) {
+                showAlert("Erro", "Nome é obrigatório");
+                return;
+            }
+            
+            if (emailField.getText().isEmpty() || !isValidEmail(emailField.getText())) {
+                showAlert("Erro", "Email inválido");
                 return;
             }
             
             if (positionComboBox.getValue() == null) {
-                messageLabel.setText("Por favor, selecione um cargo");
+                showAlert("Erro", "Selecione um cargo");
                 return;
             }
             
+            // Validate salary
             double salary = 0;
             if (!salaryField.getText().isEmpty()) {
                 try {
                     salary = Double.parseDouble(salaryField.getText());
-                    if (salary < 0) {
-                        messageLabel.setText("Salário não pode ser negativo");
+                    if (salary <= 0) {
+                        showAlert("Erro", "Salário deve ser maior que zero");
                         return;
                     }
                 } catch (NumberFormatException e) {
-                    messageLabel.setText("Salário deve ser um número válido");
+                    showAlert("Erro", "Salário deve ser um número válido");
                     return;
                 }
             }
             
+            // Create or update employee
             if (employee == null) {
                 employee = new Employee();
+                employee.setUserId(userIdField.getText());
+                employee.setEmployeeId(employeeIdField.getText());
             }
             
-            employee.setUserId(userIdField.getText());
-            employee.setEmployeeId(employeeIdField.getText());
             employee.setName(nameField.getText());
             employee.setEmail(emailField.getText());
             employee.setPhoneNumber(phoneField.getText());
@@ -133,13 +146,24 @@ public class EmployeeFormController {
             employee.setSalary(salary);
             employee.setDateHired(dateHiredPicker.getValue());
             
+            // Save to database
+            if (isEditMode) {
+                dbService.updateUser(employee);
+            } else {
+                dbService.addUser(employee);
+            }
+            
             closeForm();
             
         } catch (Exception e) {
-            messageLabel.setText("Erro: " + e.getMessage());
+            showAlert("Erro", "Ocorreu um erro: " + e.getMessage());
         }
     }
     
+    private boolean isValidEmail(String email) {
+      return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
+
     @FXML
     private void handleCancel() {
         employee = null;
@@ -153,5 +177,13 @@ public class EmployeeFormController {
     
     public Employee getEmployee() {
         return employee;
+    }
+
+    private void showAlert(String title, String message) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle(title);
+      alert.setHeaderText(null);
+      alert.setContentText(message);
+      alert.showAndWait();
     }
 }

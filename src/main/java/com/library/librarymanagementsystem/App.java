@@ -1,6 +1,7 @@
 package com.library.librarymanagementsystem;
 
-import com.library.model.User;
+import com.library.database.DatabaseConnection;
+import com.library.util.TestDataGenerator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,22 +9,54 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+/**
+ * JavaFX App - Main class for the Library Management System
+ */
 public class App extends Application {
 
     private static Scene scene;
-    private static User loggedInUser;
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Initialize database and load sample data
-        initializeDatabase();
-        
-        scene = new Scene(loadFXML("login"));
-        stage.setTitle("Sistema de Gerenciamento de Biblioteca");
-        stage.setScene(scene);
-        stage.show();
+        System.out.println("Initializing database...");
+        try {
+            // Initialize database and create tables
+            DatabaseConnection.initializeDatabase();
+            
+            // Check if we need to generate test data
+            Connection conn = DatabaseConnection.getConnection();
+            boolean needsData = true;
+            
+            try {
+                ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) FROM accounts");
+                if (rs.next() && rs.getInt(1) > 0) {
+                    System.out.println("Database already contains data.");
+                    needsData = false;
+                }
+            } catch (SQLException e) {
+                System.out.println("Error checking accounts table: " + e.getMessage());
+                // Continue with data generation
+            }
+            
+            if (needsData) {
+                System.out.println("Generating test data...");
+                TestDataGenerator generator = new TestDataGenerator();
+                generator.generateTestData();
+            }
+            
+            scene = new Scene(loadFXML("login"), 640, 480);
+            stage.setScene(scene);
+            stage.setTitle("Library Management System - Login");
+            stage.show();
+            
+        } catch (Exception e) {
+            System.err.println("Error initializing application: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public static void setRoot(String fxml) throws IOException {
@@ -39,22 +72,9 @@ public class App extends Application {
         launch();
     }
     
-    public static User getLoggedInUser() {
-        return loggedInUser;
-    }
-    
-    public static void setLoggedInUser(User user) {
-        loggedInUser = user;
-    }
-    
-    private void initializeDatabase() {
-        try {
-            System.out.println("Initializing file-based database...");
-            
-            System.out.println("Database initialized with sample data.");
-        } catch (Exception e) {
-            System.err.println("Error initializing database: " + e.getMessage());
-            e.printStackTrace();
-        }
+    @Override
+    public void stop() {
+        System.out.println("Closing database connection...");
+        DatabaseConnection.closeConnection();
     }
 }

@@ -1,183 +1,149 @@
 package com.library.model;
 
-import java.util.ArrayList;
+import com.library.service.LibraryDatabaseService;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LibraryDatabase {
-    private List<Book> books;
-    private List<User> users;
-    private List<Account> accounts;
+    private LibraryDatabaseService databaseService;
     
     public LibraryDatabase() {
-        this.books = new ArrayList<>();
-        this.users = new ArrayList<>();
-        this.accounts = new ArrayList<>();
+        this.databaseService = new LibraryDatabaseService();
     }
     
-    
+    // Book Operations
     public List<Book> getBooks() {
-        return books;
+        return databaseService.getAllBooks();
     }
     
     public void setBooks(List<Book> books) {
-        this.books = books;
+        // Clear existing books and add the new ones
+        List<Book> existingBooks = getBooks();
+        for (Book book : existingBooks) {
+            databaseService.removeBook(book);
+        }
+        for (Book book : books) {
+            databaseService.addBook(book);
+        }
     }
-    
-    public List<User> getUsers() {
-        return users;
-    }
-    
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-    
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-    
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-    
     
     public void addBook(Book book) {
-        books.add(book);
+        databaseService.addBook(book);
     }
     
     public void removeBook(Book book) {
-        books.remove(book);
+        databaseService.removeBook(book);
     }
     
     public void updateBook(Book book) {
-        for (int i = 0; i < books.size(); i++) {
-            if (books.get(i).getBookId().equals(book.getBookId())) {
-                books.set(i, book);
-                break;
-            }
-        }
+        databaseService.updateBook(book);
     }
     
     public Book findBookById(String bookId) {
-        for (Book book : books) {
-            if (book.getBookId().equals(bookId)) {
-                return book;
-            }
-        }
-        return null;
+        return databaseService.getBookById(bookId);
     }
     
     public List<Book> findBooksByTitle(String title) {
-        return books.stream()
-                .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
-                .collect(Collectors.toList());
+        return databaseService.findBooksByTitle(title);
     }
     
     public List<Book> findBooksByAuthor(String author) {
-        return books.stream()
-                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
-                .collect(Collectors.toList());
+        return databaseService.findBooksByAuthor(author);
     }
     
     public List<Book> findAvailableBooks() {
-        return books.stream()
-                .filter(Book::isAvailable)
-                .collect(Collectors.toList());
+        return databaseService.findAvailableBooks();
     }
     
+    // User Operations
+    public List<User> getUsers() {
+        return databaseService.getAllUsers();
+    }
+    
+    public void setUsers(List<User> users) {
+        // Clear existing users and add the new ones
+        List<User> existingUsers = getUsers();
+        for (User user : existingUsers) {
+            databaseService.removeUser(user);
+        }
+        for (User user : users) {
+            databaseService.addUser(user);
+        }
+    }
     
     public void addUser(User user) {
-        users.add(user);
+        databaseService.addUser(user);
     }
     
     public void removeUser(User user) {
-        users.remove(user);
+        databaseService.removeUser(user);
     }
     
     public void updateUser(User user) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUserId().equals(user.getUserId())) {
-                users.set(i, user);
-                break;
-            }
-        }
+        databaseService.updateUser(user);
     }
     
     public User findUserById(String userId) {
-        for (User user : users) {
-            if (user.getUserId().equals(userId)) {
-                return user;
-            }
+        return databaseService.getUserById(userId);
+    }
+    
+    // public List<User> findUsersByName(String name) {
+    //     return databaseService.findUsersByName(name);
+    // }
+    
+    // Account Operations
+    public List<Account> getAccounts() {
+        return databaseService.getAllAccounts();
+    }
+    
+    public void setAccounts(List<Account> accounts) {
+        // Clear existing accounts and add the new ones
+        List<Account> existingAccounts = getAccounts();
+        for (Account account : existingAccounts) {
+            databaseService.removeAccount(account);
         }
-        return null;
+        for (Account account : accounts) {
+            databaseService.addAccount(account);
+        }
     }
-    
-    public List<User> findUsersByName(String name) {
-        return users.stream()
-                .filter(user -> user.getName().toLowerCase().contains(name.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-    
     
     public void addAccount(Account account) {
-        accounts.add(account);
+        databaseService.addAccount(account);
     }
     
     public void removeAccount(Account account) {
-        accounts.remove(account);
+        databaseService.removeAccount(account);
     }
     
     public void updateAccount(Account account) {
-        for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).getAccountId().equals(account.getAccountId())) {
-                accounts.set(i, account);
-                break;
-            }
-        }
+        databaseService.updateAccount(account);
     }
     
     public Account findAccountById(String accountId) {
-        for (Account account : accounts) {
-            if (account.getAccountId().equals(accountId)) {
-                return account;
-            }
-        }
-        return null;
+        return databaseService.getAccountById(accountId);
     }
     
     public Account findAccountByUsername(String username) {
-        for (Account account : accounts) {
-            if (account.getUsername().equals(username)) {
-                return account;
-            }
-        }
-        return null;
+        return databaseService.findAccountByUsername(username);
     }
     
-    
+    // Statistics
     public int getTotalBooks() {
-        return books.size();
+        return databaseService.getTotalBooks();
     }
     
     public int getAvailableBooks() {
-        return (int) books.stream()
-                .filter(Book::isAvailable)
-                .count();
+        return databaseService.getAvailableBooks();
     }
     
     public int getBorrowedBooks() {
-        return (int) books.stream()
-                .filter(book -> book.getStatus() == BookStatus.BORROWED)
-                .count();
+        return databaseService.getBorrowedBooks();
     }
     
     public int getTotalUsers() {
-        return users.size();
+        return databaseService.getTotalUsers();
     }
     
     public int getOverdueBooks() {
-        return (int) books.stream()
-                .filter(Book::isOverdue)
-                .count();
+        return databaseService.getOverdueBooks();
     }
 }

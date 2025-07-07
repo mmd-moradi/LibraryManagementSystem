@@ -1,194 +1,123 @@
 package com.library.controller;
 
-import com.library.model.Book;
-import com.library.model.BookStatus;
-import com.library.model.Student;
+import com.library.model.*;
+import com.library.service.LibraryDatabaseService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
 public class IssueBookController {
-    @FXML
-    private TextField bookIdField;
+
+    @FXML private TextField bookIdField;
+    @FXML private TextField bookTitleField;
+    @FXML private TextField bookAuthorField;
+    @FXML private TextField bookStatusField;
+    @FXML private TextField studentIdField;
+    @FXML private TextField studentNameField;
+    @FXML private TextField borrowedBooksField;
+    @FXML private DatePicker dueDatePicker;
+    @FXML private Button issueButton;
+    @FXML private Label messageLabel;
     
-    @FXML
-    private TextField bookTitleField;
-    
-    @FXML
-    private TextField bookAuthorField;
-    
-    @FXML
-    private TextField bookStatusField;
-    
-    @FXML
-    private TextField studentIdField;
-    
-    @FXML
-    private TextField studentNameField;
-    
-    @FXML
-    private TextField borrowedBooksField;
-    
-    @FXML
-    private DatePicker issueDatePicker;
-    
-    @FXML
-    private DatePicker dueDatePicker;
-    
-    @FXML
-    private Button issueButton;
-    
-    @FXML
-    private Button cancelButton;
-    
-    @FXML
-    private Label messageLabel;
-    
-    private Book selectedBook;
-    private Student selectedStudent;
-    
-    @FXML
-    private void initialize() {
-        issueDatePicker.setValue(LocalDate.now());
-        dueDatePicker.setValue(LocalDate.now().plusDays(14));
-        
-        issueButton.setDisable(true);
-    }
-    
+    private final LibraryDatabaseService dbService = new LibraryDatabaseService();
+    private Book currentBook;
+    private Student currentStudent;
+
+    // IssueBookController.java - Update handleBookSearch
     @FXML
     private void handleBookSearch() {
         String bookId = bookIdField.getText().trim();
         if (bookId.isEmpty()) {
-            messageLabel.setText("Por favor, digite um ID de Livro");
+            showMessage("Por favor, digite o ID do livro.");
             return;
         }
-        
-        if (bookId.equals("B001") || bookId.equals("B002") || bookId.equals("B004")) {
-            selectedBook = new Book();
-            selectedBook.setBookId(bookId);
-            
-            if (bookId.equals("B001")) {
-                selectedBook.setTitle("O Grande Gatsby");
-                selectedBook.setAuthor("F. Scott Fitzgerald");
-                selectedBook.setStatus(BookStatus.AVAILABLE);
-            } else if (bookId.equals("B002")) {
-                selectedBook.setTitle("O Sol é para Todos");
-                selectedBook.setAuthor("Harper Lee");
-                selectedBook.setStatus(BookStatus.AVAILABLE);
-            } else {
-                selectedBook.setTitle("Orgulho e Preconceito");
-                selectedBook.setAuthor("Jane Austen");
-                selectedBook.setStatus(BookStatus.AVAILABLE);
-            }
-            
-            bookTitleField.setText(selectedBook.getTitle());
-            bookAuthorField.setText(selectedBook.getAuthor());
-            bookStatusField.setText(selectedBook.getStatus().toString());
-            
-            if (!selectedBook.isAvailable()) {
-                messageLabel.setText("Este livro não está disponível para empréstimo");
-                issueButton.setDisable(true);
-            } else {
-                messageLabel.setText("");
-                issueButton.setDisable(selectedStudent == null);
-            }
-            
-        } else if (bookId.equals("B003") || bookId.equals("B005")) {
-            selectedBook = new Book();
-            selectedBook.setBookId(bookId);
-            
-            if (bookId.equals("B003")) {
-                selectedBook.setTitle("1984");
-                selectedBook.setAuthor("George Orwell");
-                selectedBook.setStatus(BookStatus.BORROWED);
-            } else {
-                selectedBook.setTitle("O Hobbit");
-                selectedBook.setAuthor("J.R.R. Tolkien");
-                selectedBook.setStatus(BookStatus.RESERVED);
-            }
-            
-            bookTitleField.setText(selectedBook.getTitle());
-            bookAuthorField.setText(selectedBook.getAuthor());
-            bookStatusField.setText(selectedBook.getStatus().toString());
-            
-            messageLabel.setText("Este livro não está disponível para empréstimo");
-            issueButton.setDisable(true);
-            
-        } else {
-            messageLabel.setText("Livro não encontrado");
+
+        currentBook = dbService.getBookById(bookId);
+        if (currentBook == null) {
+            showMessage("Livro não encontrado.");
             clearBookFields();
-            selectedBook = null;
-            issueButton.setDisable(true);
+        } else {
+            bookTitleField.setText(currentBook.getTitle());
+            bookAuthorField.setText(currentBook.getAuthor());
+            bookStatusField.setText(currentBook.getStatus().toString());
+            
+            // Enable/disable based on availability
+            issueButton.setDisable(!currentBook.isAvailable());
+            dueDatePicker.setDisable(!currentBook.isAvailable());
+            
+            if (!currentBook.isAvailable()) {
+                showMessage("Livro não está disponível para empréstimo.");
+            }
         }
-    }
-    
-    public void preloadBookId(String bookId) {
-        bookIdField.setText(bookId);
-        handleBookSearch();
     }
 
     @FXML
     private void handleStudentSearch() {
         String studentId = studentIdField.getText().trim();
         if (studentId.isEmpty()) {
-            messageLabel.setText("Por favor, digite um ID de Estudante");
+            showMessage("Por favor, digite o ID do estudante.");
             return;
         }
-        
-        if (studentId.equals("S001") || studentId.equals("S002")) {
-            selectedStudent = new Student();
-            selectedStudent.setStudentId(studentId);
-            
-            if (studentId.equals("S001")) {
-                selectedStudent.setName("João Silva");
-                borrowedBooksField.setText("2");
-            } else {
-                selectedStudent.setName("Maria Oliveira");
-                borrowedBooksField.setText("1");
-            }
-            
-            studentNameField.setText(selectedStudent.getName());
-            
-            issueButton.setDisable(selectedBook == null || !selectedBook.isAvailable());
-            messageLabel.setText("");
-            
-        } else {
-            messageLabel.setText("Estudante não encontrado");
+
+        User user = dbService.getUserById(studentId);
+        if (user == null || !(user instanceof Student)) {
+            showMessage("Estudante não encontrado.");
             clearStudentFields();
-            selectedStudent = null;
-            issueButton.setDisable(true);
+            disableIssue();
+        } else {
+            currentStudent = (Student) user;
+            studentNameField.setText(currentStudent.getName());
+            
+            int activeBorrowings = dbService.getActiveBorrowingsByUser(studentId).size();
+            borrowedBooksField.setText(String.valueOf(activeBorrowings));
+            
+            if (activeBorrowings >= 5) { // Max 5 books per student
+                showMessage("Estudante atingiu o limite de empréstimos.");
+                disableIssue();
+            } else {
+                enableIssue();
+            }
         }
     }
-    
+
     @FXML
     private void handleIssue() {
-        if (selectedBook == null || selectedStudent == null) {
-            messageLabel.setText("Por favor, selecione um livro e um estudante");
-            return;
-        }
-        
-        if (!selectedBook.isAvailable()) {
-            messageLabel.setText("Este livro não está disponível para empréstimo");
+        if (currentBook == null || currentStudent == null) {
+            showMessage("Por favor, busque um livro e estudante válidos.");
             return;
         }
         
         LocalDate dueDate = dueDatePicker.getValue();
-        if (dueDate == null || dueDate.isBefore(LocalDate.now())) {
-            messageLabel.setText("Por favor, selecione uma data de devolução válida");
+        if (dueDate == null || dueDate.isBefore(LocalDate.now().plusDays(1))) {
+            showMessage("Data de devolução inválida. Deve ser pelo menos 1 dia no futuro.");
             return;
         }
         
-        messageLabel.setText("Livro emprestado com sucesso");
-        
-        issueButton.setDisable(true);
+        try {
+            dbService.issueBook(currentBook, currentStudent, dueDate);
+            showMessage("Livro emprestado com sucesso! Data de devolução: " + dueDate);
+            resetForm();
+        } catch (Exception e) {
+            showMessage("Erro: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
-    
+
     @FXML
     private void handleCancel() {
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
+        resetForm();
+    }
+    
+    private void resetForm() {
+        bookIdField.clear();
+        studentIdField.clear();
+        dueDatePicker.setValue(null);
+        clearBookFields();
+        clearStudentFields();
+        messageLabel.setText("");
+        currentBook = null;
+        currentStudent = null;
     }
     
     private void clearBookFields() {
@@ -200,5 +129,25 @@ public class IssueBookController {
     private void clearStudentFields() {
         studentNameField.clear();
         borrowedBooksField.clear();
+    }
+    
+    private void showMessage(String message) {
+        messageLabel.setText(message);
+    }
+    
+    private void disableIssue() {
+        issueButton.setDisable(true);
+        dueDatePicker.setDisable(true);
+    }
+    
+    private void enableIssue() {
+        if (currentBook != null && currentBook.isAvailable() && 
+            currentStudent != null && 
+            Integer.parseInt(borrowedBooksField.getText()) < 5) {
+            
+            issueButton.setDisable(false);
+            dueDatePicker.setDisable(false);
+            dueDatePicker.setValue(LocalDate.now().plusWeeks(2)); // Default 2 weeks
+        }
     }
 }

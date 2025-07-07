@@ -2,12 +2,16 @@ package com.library.controller;
 
 import com.library.model.AccountStatus;
 import com.library.model.Employee;
+import com.library.model.LibraryManagementSystem;
 import com.library.model.Student;
 import com.library.model.User;
+import com.library.service.LibraryDatabaseService;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,8 +19,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
-public class UsersViewController {
+public class UsersViewController implements DashboardController.BaseController {
     @FXML
     private TextField searchField;
     
@@ -45,6 +50,10 @@ public class UsersViewController {
     private TableColumn<User, AccountStatus> statusColumn;
     
     private ObservableList<User> usersList = FXCollections.observableArrayList();
+
+    private LibraryManagementSystem librarySystem;
+    private LibraryDatabaseService dbService;
+    private User loggedInUser;
     
     @FXML
     private void initialize() {
@@ -88,14 +97,24 @@ public class UsersViewController {
     }
     
     @FXML
+    private void handleClear() {
+        searchField.clear();
+        userTypeComboBox.getSelectionModel().selectFirst();
+        usersTable.setItems(usersList);
+    }
+
+    @FXML
     private void handleSearch() {
         String searchText = searchField.getText().toLowerCase();
         String userType = userTypeComboBox.getValue();
         
+        List<User> allUsers = dbService.getAllUsers();
         ObservableList<User> filteredList = FXCollections.observableArrayList();
         
-        for (User user : usersList) {
-            boolean typeMatch = "Todos".equals(userType) || user.getUserType().equals(userType);
+        for (User user : allUsers) {
+            boolean typeMatch = "Todos".equals(userType) || 
+                               user.getDisplayUserType().equals(userType);
+            
             boolean textMatch = searchText.isEmpty() ||
                     user.getName().toLowerCase().contains(searchText) ||
                     user.getUserId().toLowerCase().contains(searchText) ||
@@ -110,35 +129,25 @@ public class UsersViewController {
     }
     
     @FXML
-    private void handleClear() {
-        searchField.clear();
-        userTypeComboBox.getSelectionModel().selectFirst();
-        usersTable.setItems(usersList);
-    }
-    
-    @FXML
     private void handleAddStudent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/student_form.fxml"));
-            Scene scene = new Scene(loader.load());
+            Parent root = loader.load();
+            
+            StudentFormController controller = loader.getController();
             
             Stage stage = new Stage();
             stage.setTitle("Adicionar Estudante");
-            stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(usersTable.getScene().getWindow());
+            stage.setScene(new Scene(root));
             stage.showAndWait();
             
-            StudentFormController controller = loader.getController();
-            Student newStudent = controller.getStudent();
-            
-            if (newStudent != null) {
-                usersList.add(newStudent);
-                usersTable.refresh();
-            }
+            // Refresh user list
+            loadUsers();
             
         } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erro ao abrir formulário de estudante: " + e.getMessage());
+            showAlert("Erro", "Erro ao abrir formulário: " + e.getMessage());
         }
     }
     
@@ -146,71 +155,68 @@ public class UsersViewController {
     private void handleAddEmployee() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/employee_form.fxml"));
-            Scene scene = new Scene(loader.load());
+            Parent root = loader.load();
+            
+            EmployeeFormController controller = loader.getController();
             
             Stage stage = new Stage();
             stage.setTitle("Adicionar Funcionário");
-            stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(usersTable.getScene().getWindow());
+            stage.setScene(new Scene(root));
             stage.showAndWait();
             
-            EmployeeFormController controller = loader.getController();
-            Employee newEmployee = controller.getEmployee();
-            
-            if (newEmployee != null) {
-                usersList.add(newEmployee);
-                usersTable.refresh();
-            }
+            // Refresh user list
+            loadUsers();
             
         } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erro ao abrir formulário de funcionário: " + e.getMessage());
+            showAlert("Erro", "Erro ao abrir formulário: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void handleEditUser() {
         User selectedUser = usersTable.getSelectionModel().getSelectedItem();
         if (selectedUser == null) {
-            showAlert("Por favor, selecione um usuário para editar");
+            showAlert("Erro", "Selecione um usuário para editar");
             return;
         }
         
         try {
             if (selectedUser instanceof Student) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/student_form.fxml"));
-                Scene scene = new Scene(loader.load());
+                Parent root = loader.load();
                 
                 StudentFormController controller = loader.getController();
                 controller.setStudent((Student) selectedUser);
                 
                 Stage stage = new Stage();
                 stage.setTitle("Editar Estudante");
-                stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(usersTable.getScene().getWindow());
+                stage.setScene(new Scene(root));
                 stage.showAndWait();
-                
-                usersTable.refresh();
                 
             } else if (selectedUser instanceof Employee) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/employee_form.fxml"));
-                Scene scene = new Scene(loader.load());
+                Parent root = loader.load();
                 
                 EmployeeFormController controller = loader.getController();
                 controller.setEmployee((Employee) selectedUser);
                 
                 Stage stage = new Stage();
                 stage.setTitle("Editar Funcionário");
-                stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(usersTable.getScene().getWindow());
+                stage.setScene(new Scene(root));
                 stage.showAndWait();
-                
-                usersTable.refresh();
             }
             
+            // Refresh user list
+            loadUsers();
+            
         } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erro ao abrir formulário de edição: " + e.getMessage());
+            showAlert("Erro", "Erro ao abrir formulário: " + e.getMessage());
         }
     }
     
@@ -218,25 +224,51 @@ public class UsersViewController {
     private void handleDeleteUser() {
         User selectedUser = usersTable.getSelectionModel().getSelectedItem();
         if (selectedUser == null) {
-            showAlert("Por favor, selecione um usuário para excluir");
+            showAlert("Erro", "Selecione um usuário para excluir");
             return;
         }
         
+        // Confirm deletion
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmar Exclusão");
-        alert.setHeaderText("Excluir Usuário");
-        alert.setContentText("Tem certeza que deseja excluir " + selectedUser.getName() + "?");
+        alert.setHeaderText("Excluir " + selectedUser.getName());
+        alert.setContentText("Tem certeza que deseja excluir este usuário?");
         
-        if (alert.showAndWait().get() == ButtonType.OK) {
-            usersList.remove(selectedUser);
-        }
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    dbService.removeUser(selectedUser);
+                    loadUsers();
+                    showAlert("Sucesso", "Usuário excluído com sucesso");
+                } catch (Exception e) {
+                    showAlert("Erro", "Erro ao excluir usuário: " + e.getMessage());
+                }
+            }
+        });
     }
-    
-    private void showAlert(String message) {
+
+    private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Informação");
+        alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @Override
+    public void setLibrarySystem(LibraryManagementSystem librarySystem) {
+        this.librarySystem = librarySystem;
+        this.dbService = new LibraryDatabaseService();
+        loadUsers();
+    }
+
+    private void loadUsers() {
+      List<User> users = dbService.getAllUsers();
+      usersList.setAll(users);
+    }
+
+    public void setLoggedInUser(User user) {
+      this.loggedInUser = user;
+    }
+
 }

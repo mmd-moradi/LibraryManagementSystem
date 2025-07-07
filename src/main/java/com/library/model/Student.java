@@ -1,15 +1,10 @@
 package com.library.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Student extends User {
     private String studentId;
     private String department;
-    private List<Book> borrowedBooks;
     
     public Student() {
-        this.borrowedBooks = new ArrayList<>();
     }
     
     public Student(String userId, String name, String email, String phoneNumber, 
@@ -17,9 +12,7 @@ public class Student extends User {
         super(userId, name, email, phoneNumber, address);
         this.studentId = studentId;
         this.department = department;
-        this.borrowedBooks = new ArrayList<>();
     }
-    
     
     public String getStudentId() {
         return studentId;
@@ -37,43 +30,6 @@ public class Student extends User {
         this.department = department;
     }
     
-    public List<Book> getBorrowedBooks() {
-        return borrowedBooks;
-    }
-    
-    public void setBorrowedBooks(List<Book> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
-    
-    
-    public void borrowBook(Book book) {
-        if (book.isAvailable() && borrowedBooks.size() < 5) {
-            book.borrowBook(this, 14); 
-            borrowedBooks.add(book);
-        }
-    }
-    
-    public void returnBook(Book book) {
-        if (borrowedBooks.contains(book)) {
-            book.returnBook();
-            borrowedBooks.remove(book);
-        }
-    }
-    
-    public int getNumberOfBorrowedBooks() {
-        return borrowedBooks.size();
-    }
-    
-    public List<Book> getOverdueBooks() {
-        List<Book> overdueBooks = new ArrayList<>();
-        for (Book book : borrowedBooks) {
-            if (book.isOverdue()) {
-                overdueBooks.add(book);
-            }
-        }
-        return overdueBooks;
-    }
-    
     @Override
     public String getUserType() {
         return "Student";
@@ -85,7 +41,6 @@ public class Student extends User {
                 "name='" + getName() + '\'' +
                 ", studentId='" + studentId + '\'' +
                 ", department='" + department + '\'' +
-                ", borrowedBooks=" + borrowedBooks.size() +
                 '}';
     }
 }
