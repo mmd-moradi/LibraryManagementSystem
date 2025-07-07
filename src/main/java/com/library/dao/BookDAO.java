@@ -57,7 +57,7 @@ public class BookDAO extends BaseDAO implements DAO<Book> {
     public void save(Book book) {
         try {
             String sql = "INSERT INTO books (book_id, title, author, isbn, category, " +
-                        "publication_year, status) " +  // Removed borrowed fields
+                        "publication_year, status) " +  
                         "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, book.getBookId());
@@ -77,7 +77,7 @@ public class BookDAO extends BaseDAO implements DAO<Book> {
     public void update(Book book) {
         try {
             String sql = "UPDATE books SET title = ?, author = ?, isbn = ?, category = ?, " +
-                        "publication_year = ?, status = ? " +  // Removed borrowed fields
+                        "publication_year = ?, status = ? " +  
                         "WHERE book_id = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, book.getTitle());
@@ -243,12 +243,12 @@ public class BookDAO extends BaseDAO implements DAO<Book> {
     
     private Book mapResultSetToBook(ResultSet rs) throws SQLException {
         Book book = new Book(
-            rs.getString("book_id"), // Use snake_case to match DB
+            rs.getString("book_id"), 
             rs.getString("title"),
             rs.getString("author"),
             rs.getString("isbn"),
             rs.getString("category"),
-            rs.getInt("publication_year"), // Use snake_case
+            rs.getInt("publication_year"), 
             BookStatus.valueOf(rs.getString("status"))
         );
         return book;

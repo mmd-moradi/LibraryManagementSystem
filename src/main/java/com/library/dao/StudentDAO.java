@@ -49,9 +49,9 @@ public class StudentDAO extends BaseDAO implements DAO<Student> {
     @Override
     public void save(Student student) {
         try {
-            connection.setAutoCommit(false); // Start transaction
+            connection.setAutoCommit(false); 
             
-            // Save to users table
+            
             String userSql = "INSERT INTO users (user_id, name, email, phone_number, address, user_type) " +
                              "VALUES (?, ?, ?, ?, ?, 'Student')";
             try (PreparedStatement userStmt = connection.prepareStatement(userSql)) {
@@ -63,7 +63,7 @@ public class StudentDAO extends BaseDAO implements DAO<Student> {
                 userStmt.executeUpdate();
             }
 
-            // Save to students table
+            
             String studentSql = "INSERT INTO students (student_id, department, user_id) " +
                                 "VALUES (?, ?, ?)";
             try (PreparedStatement studentStmt = connection.prepareStatement(studentSql)) {
@@ -87,7 +87,7 @@ public class StudentDAO extends BaseDAO implements DAO<Student> {
         try {
             connection.setAutoCommit(false);
             
-            // Update users table
+            
             String userSql = "UPDATE users SET name = ?, email = ?, phone_number = ?, address = ? " +
                              "WHERE user_id = ?";
             try (PreparedStatement userStmt = connection.prepareStatement(userSql)) {
@@ -99,7 +99,7 @@ public class StudentDAO extends BaseDAO implements DAO<Student> {
                 userStmt.executeUpdate();
             }
 
-            // Update students table
+            
             String studentSql = "UPDATE students SET department = ? " +
                                "WHERE student_id = ?";
             try (PreparedStatement studentStmt = connection.prepareStatement(studentSql)) {
@@ -122,14 +122,14 @@ public class StudentDAO extends BaseDAO implements DAO<Student> {
         try {
             connection.setAutoCommit(false);
             
-            // Delete from students table
+            
             String studentSql = "DELETE FROM students WHERE student_id = ?";
             try (PreparedStatement studentStmt = connection.prepareStatement(studentSql)) {
                 studentStmt.setString(1, student.getStudentId());
                 studentStmt.executeUpdate();
             }
 
-            // Delete from users table
+            
             String userSql = "DELETE FROM users WHERE user_id = ?";
             try (PreparedStatement userStmt = connection.prepareStatement(userSql)) {
                 userStmt.setString(1, student.getUserId());
@@ -157,7 +157,7 @@ public class StudentDAO extends BaseDAO implements DAO<Student> {
         return student;
     }
     
-    // Helper methods for transaction management
+    
     private void rollbackTransaction() {
         try {
             if (connection != null) {

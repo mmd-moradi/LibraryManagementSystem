@@ -20,7 +20,7 @@ public class EmployeeDAO implements DAO<Employee> {
     @Override
     public Optional<Employee> get(String id) {
         try {
-            // First try to find by employee_id
+            
             String sql = "SELECT e.*, u.* FROM employees e " +
                          "JOIN users u ON e.user_id = u.user_id " +
                          "WHERE e.employee_id = ?";
@@ -33,7 +33,7 @@ public class EmployeeDAO implements DAO<Employee> {
                 return Optional.of(employee);
             }
             
-            // Then try to find by user_id
+            
             sql = "SELECT e.*, u.* FROM employees e " +
                   "JOIN users u ON e.user_id = u.user_id " +
                   "WHERE e.user_id = ?";
@@ -72,7 +72,7 @@ public class EmployeeDAO implements DAO<Employee> {
     @Override
     public void save(Employee employee) {
         try {
-            // First insert into users table if it doesn't exist
+            
             String checkUserSql = "SELECT COUNT(*) FROM users WHERE user_id = ?";
             PreparedStatement checkStmt = connection.prepareStatement(checkUserSql);
             checkStmt.setString(1, employee.getUserId());
@@ -91,7 +91,7 @@ public class EmployeeDAO implements DAO<Employee> {
                 userStmt.executeUpdate();
             }
             
-            // Then insert into employees table
+            
             String employeeSql = "INSERT INTO employees (employee_id, position, date_hired, salary, user_id) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement employeeStmt = connection.prepareStatement(employeeSql);
             employeeStmt.setString(1, employee.getEmployeeId());
@@ -114,7 +114,7 @@ public class EmployeeDAO implements DAO<Employee> {
     @Override
     public void update(Employee employee) {
         try {
-            // Update users table
+            
             String userSql = "UPDATE users SET name = ?, email = ?, phone_number = ?, address = ? WHERE user_id = ?";
             PreparedStatement userStmt = connection.prepareStatement(userSql);
             userStmt.setString(1, employee.getName());
@@ -124,7 +124,7 @@ public class EmployeeDAO implements DAO<Employee> {
             userStmt.setString(5, employee.getUserId());
             userStmt.executeUpdate();
             
-            // Update employees table
+            
             String employeeSql = "UPDATE employees SET position = ?, date_hired = ?, salary = ? WHERE employee_id = ?";
             PreparedStatement employeeStmt = connection.prepareStatement(employeeSql);
             employeeStmt.setString(1, employee.getPosition());
@@ -146,13 +146,13 @@ public class EmployeeDAO implements DAO<Employee> {
     @Override
     public void delete(Employee employee) {
         try {
-            // First delete from employees table
+            
             String employeeSql = "DELETE FROM employees WHERE employee_id = ?";
             PreparedStatement employeeStmt = connection.prepareStatement(employeeSql);
             employeeStmt.setString(1, employee.getEmployeeId());
             employeeStmt.executeUpdate();
             
-            // Then delete from users table
+            
             String userSql = "DELETE FROM users WHERE user_id = ?";
             PreparedStatement userStmt = connection.prepareStatement(userSql);
             userStmt.setString(1, employee.getUserId());

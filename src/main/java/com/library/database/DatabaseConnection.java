@@ -18,7 +18,7 @@ public class DatabaseConnection {
     public static synchronized Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                // Print database path for debugging
+                
                 File dbFile = new File(DB_NAME);
                 System.out.println("Database path: " + dbFile.getAbsolutePath());
                 System.out.println("Database exists: " + dbFile.exists());
@@ -26,7 +26,7 @@ public class DatabaseConnection {
                 connection = DriverManager.getConnection(URL);
                 System.out.println("Database connection established successfully.");
                 
-                // Enable foreign keys
+                
                 Statement stmt = connection.createStatement();
                 stmt.execute("PRAGMA foreign_keys = ON");
                 stmt.close();
@@ -70,12 +70,12 @@ public class DatabaseConnection {
             System.err.println("Database initialization error: " + e.getMessage());
             e.printStackTrace();
         }
-        // DO NOT close the connection here
+        
     }
     
     private static void createTables(Connection conn) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
-            // Create users table
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
                         "user_id TEXT PRIMARY KEY," +
                         "name TEXT NOT NULL," +
@@ -85,7 +85,7 @@ public class DatabaseConnection {
                         "user_type TEXT NOT NULL" +
                         ")");
             
-            // Create students table
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS students (" +
                         "student_id TEXT PRIMARY KEY," +
                         "department TEXT," +
@@ -93,7 +93,7 @@ public class DatabaseConnection {
                         "FOREIGN KEY (user_id) REFERENCES users(user_id)" +
                         ")");
             
-            // Create employees table
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS employees (" +
                         "employee_id TEXT PRIMARY KEY," +
                         "position TEXT," +
@@ -103,14 +103,14 @@ public class DatabaseConnection {
                         "FOREIGN KEY (user_id) REFERENCES users(user_id)" +
                         ")");
             
-            // Create librarians table
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS librarians (" +
                         "specialization TEXT," +
                         "employee_id TEXT NOT NULL," +
                         "FOREIGN KEY (employee_id) REFERENCES employees(employee_id)" +
                         ")");
             
-            // Create accounts table
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS accounts (" +
                         "account_id TEXT PRIMARY KEY," +
                         "username TEXT UNIQUE NOT NULL," +
@@ -122,7 +122,7 @@ public class DatabaseConnection {
                         "FOREIGN KEY (user_id) REFERENCES users(user_id)" +
                         ")");
             
-            // Create books table
+            
             stmt.execute("CREATE TABLE IF NOT EXISTS books (" +
                         "book_id TEXT PRIMARY KEY," +
                         "title TEXT NOT NULL," +
@@ -145,8 +145,8 @@ public class DatabaseConnection {
                 "dueDate DATE NOT NULL," +
                 "returnDate DATE," +
                 "status TEXT NOT NULL," +
-                "FOREIGN KEY (bookId) REFERENCES books(book_id)," + // Fixed reference
-                "FOREIGN KEY (userId) REFERENCES users(user_id)" +  // Fixed reference
+                "FOREIGN KEY (bookId) REFERENCES books(book_id)," + 
+                "FOREIGN KEY (userId) REFERENCES users(user_id)" +  
                 ")";
             stmt.execute(createBorrowingsTable);
         }

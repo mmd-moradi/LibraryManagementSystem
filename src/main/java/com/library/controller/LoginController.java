@@ -51,18 +51,18 @@ public class LoginController {
             return;
         }
         
-        // Authenticate using the database
+        
         Account account = dbService.findAccountByUsername(username);
         if (account != null && account.login(password)) {
-            // Update last login time
+            
             account.setLastLogin(LocalDateTime.now());
             dbService.updateAccount(account);
             
-            // Set current user in library system
+            
             librarySystem.setCurrentUser(account.getUser());
             
             try {
-                // Load dashboard.fxml - ensure the file exists in the /fxml folder
+                
                 System.out.println("Loading dashboard.fxml");
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
                 

@@ -61,7 +61,7 @@ public class StudentFormController {
             "Medicina", "Direito", "Economia", "Educação", "Psicologia", "Outro"
         ));
         
-        // Only generate IDs for new students
+        
         if (student == null) {
             userIdField.setText("U" + String.format("%03d", (int)(Math.random() * 1000)));
             studentIdField.setText("S" + String.format("%03d", (int)(Math.random() * 1000)));
@@ -89,7 +89,7 @@ public class StudentFormController {
     @FXML
     private void handleSave() {
         try {
-            // Validate required fields
+            
             if (nameField.getText().isEmpty()) {
                 showAlert("Erro", "Nome é obrigatório");
                 return;
@@ -105,7 +105,7 @@ public class StudentFormController {
                 return;
             }
             
-            // Create or update student
+            
             if (student == null) {
                 student = new Student();
                 student.setUserId(userIdField.getText());
@@ -118,7 +118,7 @@ public class StudentFormController {
             student.setAddress(addressField.getText());
             student.setDepartment(departmentComboBox.getValue());
             
-            // Save to database
+            
             if (isEditMode) {
                 dbService.updateUser(student);
             } else {

@@ -45,12 +45,12 @@ public class BooksViewController implements DashboardController.BaseController {
     private void initialize() {
         dbService = new LibraryDatabaseService();
         
-        // Initialize the ComboBox
+        
         searchTypeComboBox.setItems(FXCollections.observableArrayList(
                 "Título", "Autor", "ISBN", "Categoria"));
         searchTypeComboBox.getSelectionModel().selectFirst();
         
-        // Set up the columns
+        
         bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -59,10 +59,10 @@ public class BooksViewController implements DashboardController.BaseController {
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("publicationYear"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         
-        // Load the books
+        
         loadBooks();
         
-        // Set up the search field to filter as you type
+        
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             searchBooks();
         });
@@ -89,7 +89,7 @@ public class BooksViewController implements DashboardController.BaseController {
         String searchType = searchTypeComboBox.getSelectionModel().getSelectedItem();
         
         if (searchText.isEmpty()) {
-            loadBooks(); // Reset to show all books
+            loadBooks(); 
             return;
         }
         
@@ -123,7 +123,7 @@ public class BooksViewController implements DashboardController.BaseController {
                 filteredBooks = allBooks;
         }
         
-        // Apply status filter if set
+        
         if (filterStatus != null) {
             filteredBooks = filteredBooks.stream()
                 .filter(book -> book.getStatus() == filterStatus)
@@ -153,7 +153,7 @@ public class BooksViewController implements DashboardController.BaseController {
 
     @FXML
     private void handleBack() {
-        // Get the tab pane and close the current tab
+        
         TabPane tabPane = (TabPane) booksTable.getScene().lookup("#tabPane");
         if (tabPane != null && tabPane.getTabs().size() > 1) {
             tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
@@ -176,7 +176,7 @@ public class BooksViewController implements DashboardController.BaseController {
         stage.setScene(new Scene(root));
         stage.showAndWait();
         
-        // Refresh book list after form closes
+        
         loadBooks();
       } catch (IOException e) {
           e.printStackTrace();
@@ -211,7 +211,7 @@ public class BooksViewController implements DashboardController.BaseController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
             
-            // Refresh book list after form closes
+            
             loadBooks();
         } catch (IOException e) {
             e.printStackTrace();
@@ -246,7 +246,7 @@ public class BooksViewController implements DashboardController.BaseController {
         });
     }
 
-// Add helper method for info alerts
+
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");
@@ -262,7 +262,7 @@ public class BooksViewController implements DashboardController.BaseController {
         String searchType = searchTypeComboBox.getSelectionModel().getSelectedItem();
         
         if (searchText.isEmpty()) {
-            loadBooks(); // Reset to show all books
+            loadBooks(); 
             return;
         }
         

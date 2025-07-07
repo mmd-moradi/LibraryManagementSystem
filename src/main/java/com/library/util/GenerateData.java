@@ -7,7 +7,7 @@ public class GenerateData {
         generator.generateTestData();
         System.out.println("Test data generation completed successfully!");
         
-        // Important: Don't close the connection, just let the program exit
+        
         System.out.println("You can now run the main application and log in with:");
         System.out.println("Username: carlos.pereira");
         System.out.println("Password: admin789");

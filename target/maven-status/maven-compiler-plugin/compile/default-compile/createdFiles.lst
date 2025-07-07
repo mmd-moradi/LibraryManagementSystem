@@ -8,6 +8,7 @@ com/library/controller/PopularBooksController$PopularBook.class
 com/library/service/LibraryDatabaseService.class
 com/library/controller/LoginController.class
 com/library/controller/DashboardController$BaseController.class
+com/library/controller/BorrowingsViewController$3.class
 com/library/controller/DashboardController.class
 com/library/util/DirectDatabaseSetup.class
 com/library/dao/BaseDAO.class
@@ -19,6 +20,7 @@ com/library/controller/BorrowingsViewController.class
 com/library/controller/BookFormController.class
 com/library/util/TestDataGenerator.class
 com/library/controller/OverdueReportController$2.class
+com/library/controller/BorrowingsViewController$2.class
 com/library/model/Book.class
 com/library/librarymanagementsystem/SystemInfo.class
 com/library/controller/OverdueReportController.class
@@ -30,6 +32,7 @@ com/library/model/Librarian.class
 com/library/dao/StudentDAO.class
 com/library/dao/UserDAO.class
 com/library/controller/StudentFormController.class
+com/library/controller/BorrowingsViewController$1.class
 com/library/dao/DAO.class
 com/library/controller/OverdueReportController$3.class
 com/library/dao/EmployeeDAO.class

@@ -64,7 +64,7 @@ public class EmployeeFormController {
         
         dateHiredPicker.setValue(LocalDate.now());
         
-        // Only generate IDs for new employees
+        
         if (employee == null) {
             userIdField.setText("U" + String.format("%03d", (int)(Math.random() * 1000)));
             employeeIdField.setText("E" + String.format("%03d", (int)(Math.random() * 1000)));
@@ -100,7 +100,7 @@ public class EmployeeFormController {
     @FXML
     private void handleSave() {
         try {
-            // Validate required fields
+            
             if (nameField.getText().isEmpty()) {
                 showAlert("Erro", "Nome é obrigatório");
                 return;
@@ -116,7 +116,7 @@ public class EmployeeFormController {
                 return;
             }
             
-            // Validate salary
+            
             double salary = 0;
             if (!salaryField.getText().isEmpty()) {
                 try {
@@ -131,7 +131,7 @@ public class EmployeeFormController {
                 }
             }
             
-            // Create or update employee
+            
             if (employee == null) {
                 employee = new Employee();
                 employee.setUserId(userIdField.getText());
@@ -146,7 +146,7 @@ public class EmployeeFormController {
             employee.setSalary(salary);
             employee.setDateHired(dateHiredPicker.getValue());
             
-            // Save to database
+            
             if (isEditMode) {
                 dbService.updateUser(employee);
             } else {

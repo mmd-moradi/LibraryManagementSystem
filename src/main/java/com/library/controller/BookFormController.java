@@ -76,7 +76,7 @@ public class BookFormController {
         this.isEditMode = true;
         this.generatedBookId = book.getBookId();
         
-        // Populate form fields
+        
         titleField.setText(book.getTitle());
         authorField.setText(book.getAuthor());
         isbnField.setText(book.getISBN());
@@ -88,13 +88,13 @@ public class BookFormController {
     @FXML
     private void handleSave() {
         try {
-            // Validate required fields
+            
             if (titleField.getText().isEmpty() || authorField.getText().isEmpty()) {
                 showAlert("Campos obrigatórios", "Título e Autor são campos obrigatórios");
                 return;
             }
             
-            // Validate publication year
+            
             int year;
             try {
                 year = Integer.parseInt(yearField.getText());
@@ -107,7 +107,7 @@ public class BookFormController {
                 return;
             }
             
-            // Create or update book
+            
             if (book == null) {
                 book = new Book();
                 book.setBookId(generatedBookId);
@@ -120,7 +120,7 @@ public class BookFormController {
             book.setPublicationYear(year);
             book.setStatus(statusComboBox.getValue());
             
-            // Save to database
+            
             if (isEditMode) {
                 dbService.updateBook(book);
             } else {

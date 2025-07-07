@@ -10,13 +10,13 @@ public class DatabaseTest {
             if (conn != null) {
                 System.out.println("Database connection successful!");
                 
-                // Test creating a table
+                
                 Statement stmt = conn.createStatement();
                 stmt.execute("CREATE TABLE IF NOT EXISTS test_table (id INTEGER, name TEXT)");
                 stmt.execute("INSERT INTO test_table VALUES (1, 'Test Record')");
                 System.out.println("Test table created and record inserted.");
                 
-                // Clean up
+                
                 stmt.execute("DROP TABLE test_table");
                 System.out.println("Test table removed.");
             } else {

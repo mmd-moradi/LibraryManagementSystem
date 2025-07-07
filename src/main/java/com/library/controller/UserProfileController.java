@@ -28,7 +28,7 @@ public class UserProfileController {
     public void setUser(User user) {
         this.user = user;
         
-        // Populate user details if labels exist
+        
         if (nameLabel != null) nameLabel.setText(user.getName());
         if (userIdLabel != null) userIdLabel.setText(user.getUserId());
         if (userTypeLabel != null) userTypeLabel.setText(user.getUserType());

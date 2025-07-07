@@ -12,11 +12,11 @@ public class UserDAO extends BaseDAO {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         try {
-            // Get all students
+            
             StudentDAO studentDAO = new StudentDAO();
             users.addAll(studentDAO.getAll());
             
-            // Get all employees
+            
             EmployeeDAO employeeDAO = new EmployeeDAO();
             users.addAll(employeeDAO.getAll());
             
@@ -28,12 +28,12 @@ public class UserDAO extends BaseDAO {
     
     public Optional<User> getUserById(String userId) {
         try {
-            // Try to find student
+            
             StudentDAO studentDAO = new StudentDAO();
             Optional<Student> student = studentDAO.get(userId);
             if (student.isPresent()) return Optional.of(student.get());
             
-            // Try to find employee
+            
             EmployeeDAO employeeDAO = new EmployeeDAO();
             Optional<Employee> employee = employeeDAO.get(userId);
             if (employee.isPresent()) return Optional.of(employee.get());
@@ -71,11 +71,11 @@ public class UserDAO extends BaseDAO {
     public int getUserCount() {
       int count = 0;
       try {
-        // Count students
+        
         StudentDAO studentDAO = new StudentDAO();
         count += studentDAO.getAll().size();
         
-        // Count employees
+        
         EmployeeDAO employeeDAO = new EmployeeDAO();
         count += employeeDAO.getAll().size();
         

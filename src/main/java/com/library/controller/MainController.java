@@ -21,10 +21,10 @@ public class MainController {
     
     @FXML
     private void initialize() {
-        // Initialize the library system
+        
         librarySystem = new LibraryManagementSystem("Sistema de Gerenciamento de Biblioteca");
         
-        // Load the default view (dashboard)
+        
         loadDashboard();
     }
     
@@ -67,7 +67,7 @@ public class MainController {
             stage.setScene(new Scene(bookForm));
             stage.showAndWait();
             
-            // Refresh dashboard if needed
+            
             loadDashboard();
             
         } catch (IOException e) {

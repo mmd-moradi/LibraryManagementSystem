@@ -86,7 +86,7 @@ public class BorrowingDAO extends BaseDAO implements DAO<Borrowing> {
 
     public void deleteByBookId(String bookId) {
       try {
-          String sql = "DELETE FROM borrowings WHERE bookId = ?"; // Changed book_id to bookId
+          String sql = "DELETE FROM borrowings WHERE bookId = ?"; 
           PreparedStatement stmt = connection.prepareStatement(sql);
           stmt.setString(1, bookId);
           stmt.executeUpdate();
@@ -96,7 +96,7 @@ public class BorrowingDAO extends BaseDAO implements DAO<Borrowing> {
       }
     }
 
-    // Additional methods
+    
     public List<Borrowing> getActiveBorrowingsByUser(String userId) {
         List<Borrowing> borrowings = new ArrayList<>();
         String sql = "SELECT * FROM borrowings WHERE userId = ? AND status = 'ACTIVE'";

@@ -26,11 +26,32 @@ public class ReturnBookController {
     @FXML private DatePicker returnDatePicker;
     @FXML private TextField lateFeeField;
     @FXML private Button returnButton;
+    @FXML private Button cancelButton;
     @FXML private Label messageLabel;
+    @FXML private Button searchButton; 
     
     private final LibraryDatabaseService dbService = new LibraryDatabaseService();
     private Book currentBook;
     private Borrowing currentBorrowing;
+
+    @FXML
+    private void initialize() {
+        
+        returnDatePicker.setValue(LocalDate.now());
+        
+        
+        returnButton.setDisable(true);
+        
+        
+        lateFeeField.setText("R$0.00");
+        
+        
+        returnDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (currentBorrowing != null) {
+                updateLateFee();
+            }
+        });
+    }
 
     @FXML
     private void handleBookSearch() {
@@ -50,7 +71,7 @@ public class ReturnBookController {
         bookTitleField.setText(currentBook.getTitle());
         bookAuthorField.setText(currentBook.getAuthor());
         
-        // Get borrowing information
+        
         currentBorrowing = dbService.getActiveBorrowingForBook(bookId);
         
         if (currentBorrowing == null) {
@@ -65,10 +86,10 @@ public class ReturnBookController {
             statusField.setText("EMPRESTADO");
             returnDatePicker.setValue(LocalDate.now());
             enableReturn();
+            updateLateFee();
         }
     }
 
-// ReturnBookController.java - Update handleReturn
     @FXML
     private void handleReturn() {
         if (currentBook == null || currentBorrowing == null) {
@@ -83,21 +104,21 @@ public class ReturnBookController {
         }
         
         try {
-            // Update book status
+            
             currentBook.setStatus(BookStatus.AVAILABLE);
             dbService.updateBook(currentBook);
             
-            // Update borrowing record
+            
             currentBorrowing.setReturnDate(returnDate);
             currentBorrowing.setStatus("RETURNED");
             dbService.updateBorrowing(currentBorrowing);
             
-            // Calculate late fee
+            
             double lateFee = dbService.calculateLateFee(currentBorrowing);
             lateFeeField.setText(String.format("R$%.2f", lateFee));
             
-            showMessage("Livro devolvido com sucesso! Multa: R$" + lateFee);
-            returnButton.setDisable(true);
+            showMessage("Livro devolvido com sucesso!" + (lateFee > 0 ? " Multa: R$" + String.format("%.2f", lateFee) : ""));
+            disableControls();
         } catch (Exception e) {
             showMessage("Erro: " + e.getMessage());
             e.printStackTrace();
@@ -106,18 +127,8 @@ public class ReturnBookController {
 
     @FXML
     private void handleCancel() {
-        resetForm();
-    }
-    
-    private void resetForm() {
-        bookIdField.clear();
-        clearFields();
-        returnDatePicker.setValue(null);
-        lateFeeField.clear();
-        messageLabel.setText("");
-        currentBook = null;
-        currentBorrowing = null;
-        returnButton.setDisable(false);
+        
+        cancelButton.getScene().getWindow().hide();
     }
     
     private void clearFields() {
@@ -127,6 +138,9 @@ public class ReturnBookController {
         issueDateField.clear();
         dueDateField.clear();
         statusField.clear();
+        lateFeeField.setText("R$0.00");
+        currentBook = null;
+        currentBorrowing = null;
     }
     
     private void showMessage(String message) {
@@ -135,11 +149,35 @@ public class ReturnBookController {
     
     private void disableReturn() {
         returnButton.setDisable(true);
-        returnDatePicker.setDisable(true);
     }
     
     private void enableReturn() {
         returnButton.setDisable(false);
-        returnDatePicker.setDisable(false);
+    }
+    
+    private void updateLateFee() {
+        if (currentBorrowing != null && returnDatePicker.getValue() != null) {
+            LocalDate returnDate = returnDatePicker.getValue();
+            LocalDate dueDate = currentBorrowing.getDueDate();
+            
+            if (returnDate.isAfter(dueDate)) {
+                long daysLate = java.time.temporal.ChronoUnit.DAYS.between(dueDate, returnDate);
+                double fee = daysLate * 2.0; 
+                lateFeeField.setText(String.format("R$%.2f", fee));
+            } else {
+                lateFeeField.setText("R$0.00");
+            }
+        }
+    }
+    
+    private void disableControls() {
+        
+        bookIdField.setDisable(true);
+        returnDatePicker.setDisable(true);
+        returnButton.setDisable(true);
+        if (searchButton != null) searchButton.setDisable(true);
+        
+        
+        cancelButton.setText("Fechar");
     }
 }

@@ -16,15 +16,29 @@ public class IssueBookController {
     @FXML private TextField studentIdField;
     @FXML private TextField studentNameField;
     @FXML private TextField borrowedBooksField;
+    @FXML private DatePicker issueDatePicker;
     @FXML private DatePicker dueDatePicker;
     @FXML private Button issueButton;
+    @FXML private Button cancelButton;
     @FXML private Label messageLabel;
     
     private final LibraryDatabaseService dbService = new LibraryDatabaseService();
     private Book currentBook;
     private Student currentStudent;
 
-    // IssueBookController.java - Update handleBookSearch
+    @FXML
+    private void initialize() {
+        
+        issueDatePicker.setValue(LocalDate.now());
+        issueDatePicker.setDisable(true); 
+        
+        
+        dueDatePicker.setValue(LocalDate.now().plusWeeks(2));
+        
+        
+        issueButton.setDisable(true);
+    }
+
     @FXML
     private void handleBookSearch() {
         String bookId = bookIdField.getText().trim();
@@ -37,18 +51,21 @@ public class IssueBookController {
         if (currentBook == null) {
             showMessage("Livro não encontrado.");
             clearBookFields();
+            updateIssueButtonState();
+            return;
+        }
+
+        bookTitleField.setText(currentBook.getTitle());
+        bookAuthorField.setText(currentBook.getAuthor());
+        bookStatusField.setText(currentBook.getStatus().toString());
+            
+        
+        if (!currentBook.isAvailable()) {
+            showMessage("Livro não está disponível para empréstimo.");
+            updateIssueButtonState();
         } else {
-            bookTitleField.setText(currentBook.getTitle());
-            bookAuthorField.setText(currentBook.getAuthor());
-            bookStatusField.setText(currentBook.getStatus().toString());
-            
-            // Enable/disable based on availability
-            issueButton.setDisable(!currentBook.isAvailable());
-            dueDatePicker.setDisable(!currentBook.isAvailable());
-            
-            if (!currentBook.isAvailable()) {
-                showMessage("Livro não está disponível para empréstimo.");
-            }
+            showMessage("");
+            updateIssueButtonState();
         }
     }
 
@@ -64,20 +81,22 @@ public class IssueBookController {
         if (user == null || !(user instanceof Student)) {
             showMessage("Estudante não encontrado.");
             clearStudentFields();
-            disableIssue();
+            updateIssueButtonState();
+            return;
+        }
+
+        currentStudent = (Student) user;
+        studentNameField.setText(currentStudent.getName());
+            
+        int activeBorrowings = dbService.getActiveBorrowingsByUser(studentId).size();
+        borrowedBooksField.setText(String.valueOf(activeBorrowings));
+            
+        if (activeBorrowings >= 5) { 
+            showMessage("Estudante atingiu o limite de empréstimos.");
+            updateIssueButtonState();
         } else {
-            currentStudent = (Student) user;
-            studentNameField.setText(currentStudent.getName());
-            
-            int activeBorrowings = dbService.getActiveBorrowingsByUser(studentId).size();
-            borrowedBooksField.setText(String.valueOf(activeBorrowings));
-            
-            if (activeBorrowings >= 5) { // Max 5 books per student
-                showMessage("Estudante atingiu o limite de empréstimos.");
-                disableIssue();
-            } else {
-                enableIssue();
-            }
+            showMessage("");
+            updateIssueButtonState();
         }
     }
 
@@ -97,7 +116,7 @@ public class IssueBookController {
         try {
             dbService.issueBook(currentBook, currentStudent, dueDate);
             showMessage("Livro emprestado com sucesso! Data de devolução: " + dueDate);
-            resetForm();
+            disableControls();
         } catch (Exception e) {
             showMessage("Erro: " + e.getMessage());
             e.printStackTrace();
@@ -106,48 +125,44 @@ public class IssueBookController {
 
     @FXML
     private void handleCancel() {
-        resetForm();
-    }
-    
-    private void resetForm() {
-        bookIdField.clear();
-        studentIdField.clear();
-        dueDatePicker.setValue(null);
-        clearBookFields();
-        clearStudentFields();
-        messageLabel.setText("");
-        currentBook = null;
-        currentStudent = null;
+        
+        cancelButton.getScene().getWindow().hide();
     }
     
     private void clearBookFields() {
         bookTitleField.clear();
         bookAuthorField.clear();
         bookStatusField.clear();
+        currentBook = null;
     }
     
     private void clearStudentFields() {
         studentNameField.clear();
         borrowedBooksField.clear();
+        currentStudent = null;
     }
     
     private void showMessage(String message) {
         messageLabel.setText(message);
     }
     
-    private void disableIssue() {
-        issueButton.setDisable(true);
-        dueDatePicker.setDisable(true);
+    private void updateIssueButtonState() {
+        boolean canIssue = currentBook != null && currentBook.isAvailable() && 
+                         currentStudent != null && 
+                         (borrowedBooksField.getText().isEmpty() || 
+                         Integer.parseInt(borrowedBooksField.getText()) < 5);
+        
+        issueButton.setDisable(!canIssue);
     }
     
-    private void enableIssue() {
-        if (currentBook != null && currentBook.isAvailable() && 
-            currentStudent != null && 
-            Integer.parseInt(borrowedBooksField.getText()) < 5) {
-            
-            issueButton.setDisable(false);
-            dueDatePicker.setDisable(false);
-            dueDatePicker.setValue(LocalDate.now().plusWeeks(2)); // Default 2 weeks
-        }
+    private void disableControls() {
+        
+        bookIdField.setDisable(true);
+        studentIdField.setDisable(true);
+        dueDatePicker.setDisable(true);
+        issueButton.setDisable(true);
+        
+        
+        cancelButton.setText("Fechar");
     }
 }

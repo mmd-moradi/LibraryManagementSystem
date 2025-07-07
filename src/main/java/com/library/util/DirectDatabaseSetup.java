@@ -12,10 +12,10 @@ public class DirectDatabaseSetup {
         System.out.println("Starting direct database setup...");
         
         try {
-            // Initialize database (create tables)
+            
             DatabaseConnection.initializeDatabase();
             
-            // Check if data already exists
+            
             Connection conn = DatabaseConnection.getConnection();
             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) FROM users");
             boolean hasData = rs.next() && rs.getInt(1) > 0;
@@ -41,12 +41,12 @@ public class DirectDatabaseSetup {
             System.err.println("Error setting up database: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            // We DO NOT close the connection here
+            
         }
     }
     
     private static void clearTables(Connection conn) throws Exception {
-        // Clear tables in reverse order of dependencies
+        
         String[] tableNames = {
             "books", "librarians", "accounts", "employees", "students", "users"
         };
@@ -61,10 +61,10 @@ public class DirectDatabaseSetup {
     }
     
     private static void createUsers(Connection conn) throws Exception {
-        // Create users
+        
         String userSql = "INSERT INTO users (user_id, name, email, phone_number, address, user_type) VALUES (?, ?, ?, ?, ?, ?)";
         
-        // Student 1
+        
         try (PreparedStatement stmt = conn.prepareStatement(userSql)) {
             stmt.setString(1, "U001");
             stmt.setString(2, "João Silva");
@@ -75,7 +75,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Student 2
+        
         try (PreparedStatement stmt = conn.prepareStatement(userSql)) {
             stmt.setString(1, "U002");
             stmt.setString(2, "Maria Oliveira");
@@ -86,7 +86,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Librarian
+        
         try (PreparedStatement stmt = conn.prepareStatement(userSql)) {
             stmt.setString(1, "U003");
             stmt.setString(2, "Carlos Pereira");
@@ -97,10 +97,10 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Create students
+        
         String studentSql = "INSERT INTO students (student_id, department, user_id) VALUES (?, ?, ?)";
         
-        // Student 1
+        
         try (PreparedStatement stmt = conn.prepareStatement(studentSql)) {
             stmt.setString(1, "S001");
             stmt.setString(2, "Ciência da Computação");
@@ -108,7 +108,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Student 2
+        
         try (PreparedStatement stmt = conn.prepareStatement(studentSql)) {
             stmt.setString(1, "S002");
             stmt.setString(2, "Engenharia");
@@ -116,7 +116,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Create employee (librarian)
+        
         String employeeSql = "INSERT INTO employees (employee_id, position, date_hired, salary, user_id) VALUES (?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = conn.prepareStatement(employeeSql)) {
@@ -128,7 +128,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Create librarian
+        
         String librarianSql = "INSERT INTO librarians (specialization, employee_id) VALUES (?, ?)";
         
         try (PreparedStatement stmt = conn.prepareStatement(librarianSql)) {
@@ -144,7 +144,7 @@ public class DirectDatabaseSetup {
         String bookSql = "INSERT INTO books (book_id, title, author, isbn, category, publication_year, status, borrowed_by, borrow_date, due_date) " +
                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        // Book 1
+        
         try (PreparedStatement stmt = conn.prepareStatement(bookSql)) {
             stmt.setString(1, "B001");
             stmt.setString(2, "O Grande Gatsby");
@@ -159,7 +159,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Book 2
+        
         try (PreparedStatement stmt = conn.prepareStatement(bookSql)) {
             stmt.setString(1, "B002");
             stmt.setString(2, "O Sol é para Todos");
@@ -174,7 +174,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Book 3
+        
         try (PreparedStatement stmt = conn.prepareStatement(bookSql)) {
             stmt.setString(1, "B003");
             stmt.setString(2, "1984");
@@ -189,7 +189,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Book 4
+        
         try (PreparedStatement stmt = conn.prepareStatement(bookSql)) {
             stmt.setString(1, "B004");
             stmt.setString(2, "Orgulho e Preconceito");
@@ -204,7 +204,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Book 5
+        
         try (PreparedStatement stmt = conn.prepareStatement(bookSql)) {
             stmt.setString(1, "B005");
             stmt.setString(2, "O Hobbit");
@@ -226,7 +226,7 @@ public class DirectDatabaseSetup {
         String accountSql = "INSERT INTO accounts (account_id, username, password, status, creation_date, last_login, user_id) " +
                            "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
-        // Account 1
+        
         try (PreparedStatement stmt = conn.prepareStatement(accountSql)) {
             stmt.setString(1, "A001");
             stmt.setString(2, "joao.silva");
@@ -238,7 +238,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Account 2
+        
         try (PreparedStatement stmt = conn.prepareStatement(accountSql)) {
             stmt.setString(1, "A002");
             stmt.setString(2, "maria.oliveira");
@@ -250,7 +250,7 @@ public class DirectDatabaseSetup {
             stmt.executeUpdate();
         }
         
-        // Account 3
+        
         try (PreparedStatement stmt = conn.prepareStatement(accountSql)) {
             stmt.setString(1, "A003");
             stmt.setString(2, "carlos.pereira");
@@ -266,7 +266,7 @@ public class DirectDatabaseSetup {
     }
     
     private static void linkBooksToStudents(Connection conn) throws Exception {
-        // Make student1 borrow book3
+        
         String updateSql = "UPDATE books SET status = ?, borrowed_by = ?, borrow_date = ?, due_date = ? WHERE book_id = ?";
         
         try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {

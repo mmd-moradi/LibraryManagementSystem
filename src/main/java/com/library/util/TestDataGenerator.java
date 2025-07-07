@@ -12,15 +12,15 @@ public class TestDataGenerator {
     
     public TestDataGenerator() {
         this.connection = DatabaseConnection.getConnection();
-        DatabaseConnection.initializeDatabase(); // Initialize tables
+        DatabaseConnection.initializeDatabase(); 
     }
     
     public void generateTestData() {
         try {
-            // Clean up any existing data
+            
             clearExistingData();
             
-            // Generate data
+            
             generateUsers();
             generateBooks();
             generateAccounts();
@@ -35,7 +35,7 @@ public class TestDataGenerator {
     
     private void clearExistingData() {
         try {
-            // Clear tables in reverse order of dependencies
+            
             connection.createStatement().execute("DELETE FROM books");
             connection.createStatement().execute("DELETE FROM librarians");
             connection.createStatement().execute("DELETE FROM accounts");
@@ -51,17 +51,17 @@ public class TestDataGenerator {
     
     private void generateUsers() {
         try {
-            // Insert Student 1
+            
             insertUser("U001", "João Silva", "joao.silva@example.com", "(11) 98765-4321", 
                      "Av. Paulista, 123 - São Paulo, SP", "Student");
             insertStudent("S001", "Ciência da Computação", "U001");
             
-            // Insert Student 2
+            
             insertUser("U002", "Maria Oliveira", "maria.oliveira@example.com", "(11) 91234-5678", 
                      "Rua Augusta, 456 - São Paulo, SP", "Student");
             insertStudent("S002", "Engenharia", "U002");
             
-            // Insert Librarian
+            
             insertUser("U003", "Carlos Pereira", "carlos.pereira@library.com", "(11) 97777-8888", 
                      "Rua dos Bibliotecários, 789 - São Paulo, SP", "Librarian");
             insertEmployee("E001", "Bibliotecário Chefe", "2020-03-15", 5000.0, "U003");
@@ -122,23 +122,23 @@ public class TestDataGenerator {
     
     private void generateBooks() {
         try {
-            // Book 1
+            
             insertBook("B001", "O Grande Gatsby", "F. Scott Fitzgerald", "9788525056009", 
                       "Ficção", 1925, "AVAILABLE", null, null, null);
             
-            // Book 2
+            
             insertBook("B002", "O Sol é para Todos", "Harper Lee", "9788501116598", 
                       "Ficção", 1960, "AVAILABLE", null, null, null);
             
-            // Book 3
+            
             insertBook("B003", "1984", "George Orwell", "9788522106169", 
                       "Ficção Científica", 1949, "AVAILABLE", null, null, null);
             
-            // Book 4
+            
             insertBook("B004", "Orgulho e Preconceito", "Jane Austen", "9788544001820", 
                       "Romance", 1813, "AVAILABLE", null, null, null);
             
-            // Book 5
+            
             insertBook("B005", "O Hobbit", "J.R.R. Tolkien", "9788595084742", 
                       "Fantasia", 1937, "AVAILABLE", null, null, null);
             
@@ -171,15 +171,15 @@ public class TestDataGenerator {
     
     private void generateAccounts() {
         try {
-            // Account 1
+            
             insertAccount("A001", "joao.silva", "senha123", "ACTIVE", 
                         LocalDateTime.now().minusMonths(3).toString(), null, "U001");
             
-            // Account 2
+            
             insertAccount("A002", "maria.oliveira", "senha456", "ACTIVE", 
                         LocalDateTime.now().minusMonths(2).toString(), null, "U002");
             
-            // Account 3
+            
             insertAccount("A003", "carlos.pereira", "admin789", "ACTIVE", 
                         LocalDateTime.now().minusMonths(6).toString(), null, "U003");
             
@@ -209,17 +209,17 @@ public class TestDataGenerator {
     
     private void linkBooksToStudents() {
         try {
-            // Make student1 borrow book3
+            
             LocalDate borrowDate = LocalDate.now();
             LocalDate dueDate = borrowDate.plusDays(14);
             
             String sql = "UPDATE books SET status = ?, borrowed_by = ?, borrow_date = ?, due_date = ? WHERE book_id = ?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, "BORROWED");
-                stmt.setString(2, "S001"); // Student1's ID
+                stmt.setString(2, "S001"); 
                 stmt.setString(3, borrowDate.toString());
                 stmt.setString(4, dueDate.toString());
-                stmt.setString(5, "B003"); // Book3's ID
+                stmt.setString(5, "B003"); 
                 stmt.executeUpdate();
             }
             
@@ -234,6 +234,6 @@ public class TestDataGenerator {
         System.out.println("Starting test data generation...");
         TestDataGenerator generator = new TestDataGenerator();
         generator.generateTestData();
-        // DON'T close the connection here - it will be used by the application
+        
     }
 }

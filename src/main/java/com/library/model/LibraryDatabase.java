@@ -10,13 +10,13 @@ public class LibraryDatabase {
         this.databaseService = new LibraryDatabaseService();
     }
     
-    // Book Operations
+    
     public List<Book> getBooks() {
         return databaseService.getAllBooks();
     }
     
     public void setBooks(List<Book> books) {
-        // Clear existing books and add the new ones
+        
         List<Book> existingBooks = getBooks();
         for (Book book : existingBooks) {
             databaseService.removeBook(book);
@@ -54,13 +54,13 @@ public class LibraryDatabase {
         return databaseService.findAvailableBooks();
     }
     
-    // User Operations
+    
     public List<User> getUsers() {
         return databaseService.getAllUsers();
     }
     
     public void setUsers(List<User> users) {
-        // Clear existing users and add the new ones
+        
         List<User> existingUsers = getUsers();
         for (User user : existingUsers) {
             databaseService.removeUser(user);
@@ -86,17 +86,17 @@ public class LibraryDatabase {
         return databaseService.getUserById(userId);
     }
     
-    // public List<User> findUsersByName(String name) {
-    //     return databaseService.findUsersByName(name);
-    // }
     
-    // Account Operations
+    
+    
+    
+    
     public List<Account> getAccounts() {
         return databaseService.getAllAccounts();
     }
     
     public void setAccounts(List<Account> accounts) {
-        // Clear existing accounts and add the new ones
+        
         List<Account> existingAccounts = getAccounts();
         for (Account account : existingAccounts) {
             databaseService.removeAccount(account);
@@ -126,7 +126,7 @@ public class LibraryDatabase {
         return databaseService.findAccountByUsername(username);
     }
     
-    // Statistics
+    
     public int getTotalBooks() {
         return databaseService.getTotalBooks();
     }

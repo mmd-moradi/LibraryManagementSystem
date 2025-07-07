@@ -143,7 +143,7 @@ public class UsersViewController implements DashboardController.BaseController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
             
-            // Refresh user list
+            
             loadUsers();
             
         } catch (IOException e) {
@@ -166,7 +166,7 @@ public class UsersViewController implements DashboardController.BaseController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
             
-            // Refresh user list
+            
             loadUsers();
             
         } catch (IOException e) {
@@ -212,7 +212,7 @@ public class UsersViewController implements DashboardController.BaseController {
                 stage.showAndWait();
             }
             
-            // Refresh user list
+            
             loadUsers();
             
         } catch (IOException e) {
@@ -228,7 +228,7 @@ public class UsersViewController implements DashboardController.BaseController {
             return;
         }
         
-        // Confirm deletion
+        
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmar Exclusão");
         alert.setHeaderText("Excluir " + selectedUser.getName());

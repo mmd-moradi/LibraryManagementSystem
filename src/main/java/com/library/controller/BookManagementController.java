@@ -69,7 +69,7 @@ public class BookManagementController {
 
     @FXML
     private void initialize() {
-        // Set up the table columns
+        
         idColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -77,19 +77,19 @@ public class BookManagementController {
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("publicationYear"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         
-        // Set up search type combo box
+        
         searchTypeComboBox.setItems(FXCollections.observableArrayList(
                 "Título", "Autor", "ID", "Categoria"
         ));
         searchTypeComboBox.getSelectionModel().selectFirst();
         
-        // Disable buttons until a book is selected
+        
         editButton.setDisable(true);
         deleteButton.setDisable(true);
         issueButton.setDisable(true);
         returnButton.setDisable(true);
         
-        // Enable buttons when a book is selected
+        
         bookTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             boolean bookSelected = newSelection != null;
             editButton.setDisable(!bookSelected);

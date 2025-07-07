@@ -61,30 +61,30 @@ public class StudentManagementController {
     
     @FXML
     private void initialize() {
-        // Set up the table columns
+        
         idColumn.setCellValueFactory(new PropertyValueFactory<>("studentId"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
         
-        // Custom cell factory for borrowed books count
+        
         booksColumn.setCellValueFactory(cellData -> {
             List<Borrowing> borrowedBooks = dbService.getActiveBorrowingsByUser(cellData.getValue().getStudentId());
             int count = borrowedBooks != null ? borrowedBooks.size() : 0;
             return javafx.beans.binding.Bindings.createIntegerBinding(() -> count).asObject();
         });
         
-        // Set up search type combo box
+        
         searchTypeComboBox.setItems(FXCollections.observableArrayList(
                 "Nome", "ID", "Departamento"
         ));
         searchTypeComboBox.getSelectionModel().selectFirst();
         
-        // Disable buttons until a student is selected
+        
         editButton.setDisable(true);
         deleteButton.setDisable(true);
         viewDetailsButton.setDisable(true);
         
-        // Enable buttons when a student is selected
+        
         studentTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             boolean studentSelected = newSelection != null;
             editButton.setDisable(!studentSelected);
@@ -166,7 +166,7 @@ public class StudentManagementController {
             stage.setScene(new Scene(studentForm));
             stage.showAndWait();
             
-            // Refresh student list
+            
             loadStudents();
             
         } catch (IOException e) {
@@ -193,7 +193,7 @@ public class StudentManagementController {
             stage.setScene(new Scene(studentForm));
             stage.showAndWait();
             
-            // Refresh student list
+            
             loadStudents();
             
         } catch (IOException e) {
@@ -207,7 +207,7 @@ public class StudentManagementController {
         Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
         if (selectedStudent == null) return;
         
-        // Check if student has borrowed books
+        
         List<Borrowing> borrowedBooks = dbService.getActiveBorrowingsByUser(selectedStudent.getStudentId());
         if (borrowedBooks != null && !borrowedBooks.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -24,14 +24,14 @@ public class LibraryDatabaseService {
     
 
 
-// Modify the deleteBook method to use the same connection
+
   public void deleteBook(Book book) {
     Connection conn = null;
     try {
         conn = DatabaseConnection.getConnection();
         conn.setAutoCommit(false);
         
-        // Create DAOs with the same connection
+        
         BorrowingDAO borrowingDAO = new BorrowingDAO();
         borrowingDAO.setConnection(conn);
         
@@ -91,7 +91,7 @@ public class LibraryDatabaseService {
         bookDAO.delete(book);
     }
     
-    // User Operations
+    
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
     }
@@ -112,7 +112,7 @@ public class LibraryDatabaseService {
     public void removeUser(User user) {
         userDAO.deleteUser(user);
     }
-    // Account Operations
+    
     public List<Account> getAllAccounts() {
         return accountDAO.getAll();
     }
@@ -139,7 +139,7 @@ public class LibraryDatabaseService {
         accountDAO.delete(account);
     }
     
-    // Student Operations
+    
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
         for (User user : userDAO.getAllUsers()) {
@@ -150,7 +150,7 @@ public class LibraryDatabaseService {
         return students;
     }
     
-    // Statistics
+    
     public int getTotalBooks() {
         return bookDAO.getAll().size();
     }
@@ -172,11 +172,11 @@ public class LibraryDatabaseService {
     }
 
     public void issueBook(Book book, Student student, LocalDate dueDate) {
-      // Update book status
+      
       book.setStatus(BookStatus.BORROWED);
       bookDAO.update(book);
       
-      // Create borrowing record
+      
       Borrowing borrowing = new Borrowing(
           UUID.randomUUID().toString(),
           book.getBookId(),
@@ -190,11 +190,11 @@ public class LibraryDatabaseService {
     }
 
     public void returnBook(Book book) {
-      // Update book status
+      
       book.setStatus(BookStatus.AVAILABLE);
       bookDAO.update(book);
       
-      // Update borrowing record
+      
       Borrowing borrowing = borrowingDAO.getActiveBorrowingForBook(book.getBookId());
       if (borrowing != null) {
           borrowing.setReturnDate(LocalDate.now());
@@ -217,14 +217,14 @@ public class LibraryDatabaseService {
             borrowing.getDueDate(), 
             borrowing.getReturnDate()
         );
-        return daysLate * 2.0; // $2 per day late
+        return daysLate * 2.0; 
     }
     
     public List<Book> findBooksByCategory(String category) {
       return bookDAO.findByCategory(category);
     }
     
-    // Add these methods to LibraryDatabaseService.java
+    
     public Borrowing getActiveBorrowingForBook(String bookId) {
         return borrowingDAO.getActiveBorrowingForBook(bookId);
     }

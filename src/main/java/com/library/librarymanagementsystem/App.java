@@ -24,10 +24,10 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         System.out.println("Initializing database...");
         try {
-            // Initialize database and create tables
+            
             DatabaseConnection.initializeDatabase();
             
-            // Check if we need to generate test data
+            
             Connection conn = DatabaseConnection.getConnection();
             boolean needsData = true;
             
@@ -39,7 +39,7 @@ public class App extends Application {
                 }
             } catch (SQLException e) {
                 System.out.println("Error checking accounts table: " + e.getMessage());
-                // Continue with data generation
+                
             }
             
             if (needsData) {

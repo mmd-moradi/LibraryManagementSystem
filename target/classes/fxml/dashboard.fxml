@@ -22,8 +22,6 @@
                 
                 <Region HBox.hgrow="ALWAYS" />
                 
-                <Text styleClass="user-display-text" text="mmd-moradi" />
-                
                 <Button styleClass="icon-button" onAction="#showUserProfile">
                     <graphic>
                         <SVGPath content="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
@@ -67,17 +65,6 @@
                             <MenuItem text="Emprestar Livro" onAction="#showIssueBook" />
                             <MenuItem text="Devolver Livro" onAction="#showReturnBook" />
                             <MenuItem text="Empréstimos Atuais" onAction="#showCurrentBorrows" />
-                        </items>
-                    </Menu>
-                    <Menu text="Relatórios">
-                        <items>
-                            <MenuItem text="Livros Atrasados" onAction="#showOverdueBooks" />
-                            <MenuItem text="Livros Populares" onAction="#showPopularBooks" />
-                        </items>
-                    </Menu>
-                    <Menu text="Ajuda">
-                        <items>
-                            <MenuItem text="Sobre" onAction="#showAbout" />
                         </items>
                     </Menu>
                 </menus>
@@ -213,23 +200,6 @@
                                 </graphic>
                             </Button>
                         </HBox>
-                        
-                        <!-- Recent Activities Table -->
-                        <Text styleClass="section-title" text="Atividades Recentes" />
-                        
-                        <VBox styleClass="activity-container">
-                            <TableView fx:id="recentActivitiesTable" styleClass="modern-table">
-                                <columns>
-                                    <TableColumn text="Data" fx:id="dateColumn" prefWidth="150" />
-                                    <TableColumn text="Ação" fx:id="actionColumn" prefWidth="150" />
-                                    <TableColumn text="Detalhes" fx:id="detailsColumn" prefWidth="350" />
-                                    <TableColumn text="Usuário" fx:id="userColumn" prefWidth="150" />
-                                </columns>
-                                <placeholder>
-                                    <Label text="Nenhuma atividade registrada no sistema" styleClass="empty-table-placeholder" />
-                                </placeholder>
-                            </TableView>
-                        </VBox>
                     </VBox>
                 </ScrollPane>
             </Tab>
